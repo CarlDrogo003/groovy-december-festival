@@ -1,0 +1,134 @@
+{
+  "tables": [
+    {
+      "schema": "public",
+      "name": "events",
+      "columns": [
+        { "name": "id", "type": "uuid", "primary": true, "default": "gen_random_uuid()" },
+        { "name": "title", "type": "text" },
+        { "name": "slug", "type": "text", "unique": true },
+        { "name": "date", "type": "date" },
+        { "name": "venue", "type": "text" },
+        { "name": "description", "type": "text", "nullable": true },
+        { "name": "created_at", "type": "timestamptz", "nullable": true, "default": "now()" }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "registrations",
+      "columns": [
+        { "name": "id", "type": "uuid", "primary": true, "default": "gen_random_uuid()" },
+        { "name": "event_id", "type": "uuid", "nullable": true },
+        { "name": "full_name", "type": "text" },
+        { "name": "email", "type": "text" },
+        { "name": "phone", "type": "text", "nullable": true },
+        { "name": "created_at", "type": "timestamptz", "nullable": true, "default": "now()" }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "tours",
+      "columns": [
+        { "name": "id", "type": "uuid", "primary": true, "default": "extensions.uuid_generate_v4()" },
+        { "name": "name", "type": "text" },
+        { "name": "price_usd", "type": "numeric" },
+        { "name": "duration", "type": "text", "nullable": true },
+        { "name": "description", "type": "text", "nullable": true },
+        { "name": "benefits", "type": "text[]", "nullable": true },
+        { "name": "created_at", "type": "timestamp", "nullable": true, "default": "now()" }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "tour_bookings",
+      "columns": [
+        { "name": "id", "type": "uuid", "primary": true, "default": "extensions.uuid_generate_v4()" },
+        { "name": "tour_id", "type": "uuid", "nullable": true },
+        { "name": "full_name", "type": "text" },
+        { "name": "email", "type": "text" },
+        { "name": "phone", "type": "text", "nullable": true },
+        { "name": "referral", "type": "text", "nullable": true },
+        { "name": "travelers", "type": "integer", "nullable": true, "default": 1 },
+        { "name": "special_requests", "type": "text", "nullable": true },
+        { "name": "created_at", "type": "timestamp", "nullable": true, "default": "now()" }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "vendors",
+      "columns": [
+        { "name": "id", "type": "uuid", "primary": true, "default": "gen_random_uuid()" },
+        { "name": "business_name", "type": "text" },
+        { "name": "owner_name", "type": "text" },
+        { "name": "email", "type": "text" },
+        { "name": "phone", "type": "text", "nullable": true },
+        { "name": "package", "type": "text" },
+        { "name": "created_at", "type": "timestamp", "nullable": true, "default": "now()" }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "pageant_contestants",
+      "columns": [
+        { "name": "id", "type": "uuid", "primary": true, "default": "gen_random_uuid()" },
+        { "name": "full_name", "type": "text" },
+        { "name": "stage_name", "type": "text", "nullable": true },
+        { "name": "email", "type": "text", "unique": true },
+        { "name": "phone", "type": "text", "nullable": true },
+        { "name": "date_of_birth", "type": "date", "nullable": true },
+        { "name": "place_of_birth", "type": "text", "nullable": true },
+        { "name": "nationality", "type": "text", "nullable": true },
+        { "name": "current_address", "type": "text", "nullable": true },
+        { "name": "social_media_handles", "type": "text", "nullable": true },
+        { "name": "emergency_contact_name", "type": "text", "nullable": true },
+        { "name": "emergency_contact_phone", "type": "text", "nullable": true },
+        { "name": "height", "type": "text", "nullable": true },
+        { "name": "bust_chest", "type": "text", "nullable": true },
+        { "name": "waist", "type": "text", "nullable": true },
+        { "name": "hips", "type": "text", "nullable": true },
+        { "name": "dress_size", "type": "text", "nullable": true },
+        { "name": "languages", "type": "text", "nullable": true },
+        { "name": "biography", "type": "text", "nullable": true },
+        { "name": "why", "type": "text", "nullable": true },
+        { "name": "platform", "type": "text", "nullable": true },
+        { "name": "achievements", "type": "text", "nullable": true },
+        { "name": "hobbies_skills", "type": "text", "nullable": true },
+        { "name": "medical_conditions", "type": "text", "nullable": true },
+        { "name": "headshot_url", "type": "text", "nullable": true },
+        { "name": "full_body_url", "type": "text", "nullable": true },
+        { "name": "proof_of_payment_url", "type": "text", "nullable": true },
+        { "name": "declaration_agreed", "type": "boolean", "nullable": true, "default": false },
+        { "name": "created_at", "type": "timestamptz", "nullable": true, "default": "now()" }
+      ]
+    },
+    {
+      "schema": "public",
+      "name": "admins",
+      "columns": [
+        { "name": "id", "type": "uuid", "primary": true, "default": "gen_random_uuid()" },
+        { "name": "user_id", "type": "uuid", "nullable": true, "unique": true },
+        { "name": "email", "type": "text", "nullable": true, "unique": true },
+        { "name": "role", "type": "text", "nullable": true, "default": "admin" },
+        { "name": "created_at", "type": "timestamptz", "nullable": true, "default": "now()" }
+      ]
+    }
+  ],
+  "relationships": [
+    {
+      "source_table": "registrations",
+      "source_column": "event_id",
+      "target_table": "events",
+      "target_column": "id",
+      "constraint_name": "registrations_event_id_fkey",
+      "type": "many-to-one"
+    },
+    {
+      "source_table": "tour_bookings",
+      "source_column": "tour_id",
+      "target_table": "tours",
+      "target_column": "id",
+      "constraint_name": "tour_bookings_tour_id_fkey",
+      "type": "many-to-one"
+    }
+  ]
+}
