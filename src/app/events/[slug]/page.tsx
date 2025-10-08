@@ -2,12 +2,15 @@ import { notFound } from "next/navigation";
 import { supabase } from "@/lib/supabaseClient";
 import RegisterForm from "./RegisterForm";
 
-export default async function EventDetails({ params }: { params: { slug: string } }) {
+export default async function EventDetails({ params }: { params: Promise<{ slug: string }> }) {
+  // Await params in Next.js 15
+  const { slug } = await params;
+  
   // Fetch event by slug
   const { data: event, error } = await supabase
     .from("events")
     .select("id, title, date, venue, description")
-    .eq("slug", params.slug)
+    .eq("slug", slug)
     .single();
 
   if (!event || error) return notFound();

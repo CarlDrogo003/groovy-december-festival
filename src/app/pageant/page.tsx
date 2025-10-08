@@ -74,9 +74,10 @@ export default function PageantPage() {
               </div>
               <h3 className="text-xl font-semibold mb-3">Prizes & Benefits</h3>
               <ul className="text-gray-600 space-y-2">
-                <li>• $5,000 Cash Prize</li>
-                <li>• Modeling Contract</li>
+                <li>• <strong className="text-red-600">₦10,000,000 Star Prize</strong></li>
+                <li>• <strong className="text-green-600">Innoson IVM Caris (Brand New Car)</strong></li>
                 <li>• Crown & Sash</li>
+                <li>• Modeling Contract</li>
                 <li>• Photoshoot Package</li>
                 <li>• Brand Ambassadorships</li>
               </ul>
@@ -196,9 +197,12 @@ export default function PageantPage() {
             <div>
               <h3 className="text-lg font-semibold mb-4">Contact Information</h3>
               <div className="space-y-2 text-gray-400">
-                <p>📧 pageant@groovydecember.com</p>
-                <p>📱 +1 (555) 123-4567</p>
-                <p>🌐 www.groovydecember.com</p>
+                <p>📧 hello@groovydecember.ng</p>
+                <p>📱 +2348030596162</p>
+                <p>📱 +2349168942222</p>
+                <p>💬 WhatsApp: +2348033013624</p>
+                <p>🌐 www.groovydecember.ng</p>
+                <p>📱 @groovydecember</p>
               </div>
             </div>
             <div>

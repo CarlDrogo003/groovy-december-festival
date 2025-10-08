@@ -1,0 +1,349 @@
+PS C:\Users\Olatunji\Desktop\GroovyD app> cd groovy-december
+PS C:\Users\Olatunji\Desktop\GroovyD app\groovy-december> npm run dev
+
+> groovy-december@0.1.0 dev
+> next dev --turbopack
+
+   ▲ Next.js 15.5.4 (Turbopack)
+   - Local:        http://localhost:3000
+   - Network:      http://10.104.113.31:3000
+   - Environments: .env.local
+   - Experiments (use with caution):
+     ✓ optimizeCss
+
+ ✓ Starting...
+ ○ Compiling middleware ...
+ ✓ Compiled middleware in 3.6s
+ ✓ Ready in 12.9s
+ ○ Compiling / ...
+ ✓ Compiled / in 36.7s
+Google Analytics ID not found
+ GET / 200 in 42379ms
+ ○ Compiling /favicon.ico ...
+ ✓ Compiled /favicon.ico in 3.2s
+ GET /favicon.ico?favicon.0b3bf435.ico 200 in 4784ms
+ ○ Compiling /events ...
+ ✓ Compiled /events in 2.9s
+ GET /events 200 in 4336ms
+ ○ Compiling /events/[slug] ...
+ ✓ Compiled /events/[slug] in 5.7s
+ ⨯ ./src/components/PaymentModal.tsx:5:1
+Export default doesn't exist in target module
+  3 | import { useState, useEffect } from 'react';
+  4 | import { monnifyService, FestivalPaymentConfig, formatCurrency, calculateMonnifyFee } from '@/lib/monnify';
+> 5 | import Modal from '@/components/ui/Modal';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { useEventTracking } from '@/hooks/useAnalytics';
+  7 |
+  8 | interface PaymentModalProps {
+
+The export default was not found in module [project]/src/components/ui/Modal.tsx [app-client] (ecmascript).
+Did you mean to import Modal?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/PaymentModal.tsx [Client Component Browser]
+    ./src/app/events/[slug]/RegisterForm.tsx [Client Component Browser]
+    ./src/app/events/[slug]/RegisterForm.tsx [Server Component]
+    ./src/app/events/[slug]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/PaymentModal.tsx [Client Component SSR]
+    ./src/app/events/[slug]/RegisterForm.tsx [Client Component SSR]
+    ./src/app/events/[slug]/RegisterForm.tsx [Server Component]
+    ./src/app/events/[slug]/page.tsx [Server Component]
+
+
+
+./src/components/PaymentModal.tsx:5:1
+Export default doesn't exist in target module
+  3 | import { useState, useEffect } from 'react';
+  4 | import { monnifyService, FestivalPaymentConfig, formatCurrency, calculateMonnifyFee } from '@/lib/monnify';
+> 5 | import Modal from '@/components/ui/Modal';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { useEventTracking } from '@/hooks/useAnalytics';
+  7 |
+  8 | interface PaymentModalProps {
+
+The export default was not found in module [project]/src/components/ui/Modal.tsx [app-ssr] (ecmascript).
+Did you mean to import Modal?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/PaymentModal.tsx [Client Component Browser]
+    ./src/app/events/[slug]/RegisterForm.tsx [Client Component Browser]
+    ./src/app/events/[slug]/RegisterForm.tsx [Server Component]
+    ./src/app/events/[slug]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/PaymentModal.tsx [Client Component SSR]
+    ./src/app/events/[slug]/RegisterForm.tsx [Client Component SSR]
+    ./src/app/events/[slug]/RegisterForm.tsx [Server Component]
+    ./src/app/events/[slug]/page.tsx [Server Component]
+
+
+ ○ Compiling /_error ...
+ ✓ Compiled /_error in 18s
+ ⨯ [Error: Cannot find module 'critters'
+Require stack:
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\post-process.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\render.js     
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\route-modules\pages\module.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\route-modules\pages\builtin\_error.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\load-default-error-components.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\dev\next-dev-server.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\next.js       
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\lib\start-server.js] {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+Error [ModuleBuildError]: ./src/components/PaymentModal.tsx:5:1
+Export default doesn't exist in target module
+  3 | import { useState, useEffect } from 'react';
+  4 | import { monnifyService, FestivalPaymentConfig, formatCurrency, calculateMonnifyFee } from '@/lib/monnify';
+> 5 | import Modal from '@/components/ui/Modal';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { useEventTracking } from '@/hooks/useAnalytics';
+  7 |
+  8 | interface PaymentModalProps {
+
+The export default was not found in module [project]/src/components/ui/Modal.tsx [app-client] (ecmascript).
+Did you mean to import Modal?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/PaymentModal.tsx [Client Component Browser]
+    ./src/app/events/[slug]/RegisterForm.tsx [Client Component Browser]
+    ./src/app/events/[slug]/RegisterForm.tsx [Server Component]
+    ./src/app/events/[slug]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/PaymentModal.tsx [Client Component SSR]
+    ./src/app/events/[slug]/RegisterForm.tsx [Client Component SSR]
+    ./src/app/events/[slug]/RegisterForm.tsx [Server Component]
+    ./src/app/events/[slug]/page.tsx [Server Component]
+
+
+
+./src/components/PaymentModal.tsx:5:1
+Export default doesn't exist in target module
+  3 | import { useState, useEffect } from 'react';
+  4 | import { monnifyService, FestivalPaymentConfig, formatCurrency, calculateMonnifyFee } from '@/lib/monnify';
+> 5 | import Modal from '@/components/ui/Modal';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { useEventTracking } from '@/hooks/useAnalytics';
+  7 |
+  8 | interface PaymentModalProps {
+
+The export default was not found in module [project]/src/components/ui/Modal.tsx [app-ssr] (ecmascript).
+Did you mean to import Modal?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/PaymentModal.tsx [Client Component Browser]
+    ./src/app/events/[slug]/RegisterForm.tsx [Client Component Browser]
+    ./src/app/events/[slug]/RegisterForm.tsx [Server Component]
+    ./src/app/events/[slug]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/PaymentModal.tsx [Client Component SSR]
+    ./src/app/events/[slug]/RegisterForm.tsx [Client Component SSR]
+    ./src/app/events/[slug]/RegisterForm.tsx [Server Component]
+    ./src/app/events/[slug]/page.tsx [Server Component]
+
+
+    at <unknown> (ModuleBuildError: ./src/components/PaymentModal.tsx:5:1)
+    at <unknown> (./src/components/PaymentModal.tsx:5:1)
+ ⨯ [Error: Cannot find module 'critters'
+Require stack:
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\post-process.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\render.js     
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\route-modules\pages\module.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\route-modules\pages\builtin\_error.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\load-default-error-components.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\dev\next-dev-server.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\next.js       
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\lib\start-server.js] {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+[Error: Cannot find module 'critters'
+Require stack:
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\post-process.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\render.js     
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\route-modules\pages\module.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\route-modules\pages\builtin\_error.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\load-default-error-components.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\dev\next-dev-server.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\next.js       
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\lib\start-server.js] {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ GET /events/kiddies-park 500 in 37768ms
+ GET /events/kiddies-park 500 in 3403ms
+ ⨯ ./src/components/PaymentModal.tsx:5:1
+Export default doesn't exist in target module
+  3 | import { useState, useEffect } from 'react';
+  4 | import { monnifyService, FestivalPaymentConfig, formatCurrency, calculateMonnifyFee } from '@/lib/monnify';
+> 5 | import Modal from '@/components/ui/Modal';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { useEventTracking } from '@/hooks/useAnalytics';
+  7 |
+  8 | interface PaymentModalProps {
+
+The export default was not found in module [project]/src/components/ui/Modal.tsx [app-client] (ecmascript).
+Did you mean to import Modal?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/PaymentModal.tsx [Client Component Browser]
+    ./src/app/events/[slug]/RegisterForm.tsx [Client Component Browser]
+    ./src/app/events/[slug]/RegisterForm.tsx [Server Component]
+    ./src/app/events/[slug]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/PaymentModal.tsx [Client Component SSR]
+    ./src/app/events/[slug]/RegisterForm.tsx [Client Component SSR]
+    ./src/app/events/[slug]/RegisterForm.tsx [Server Component]
+    ./src/app/events/[slug]/page.tsx [Server Component]
+
+
+
+./src/components/PaymentModal.tsx:5:1
+Export default doesn't exist in target module
+  3 | import { useState, useEffect } from 'react';
+  4 | import { monnifyService, FestivalPaymentConfig, formatCurrency, calculateMonnifyFee } from '@/lib/monnify';
+> 5 | import Modal from '@/components/ui/Modal';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { useEventTracking } from '@/hooks/useAnalytics';
+  7 |
+  8 | interface PaymentModalProps {
+
+The export default was not found in module [project]/src/components/ui/Modal.tsx [app-ssr] (ecmascript).
+Did you mean to import Modal?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/PaymentModal.tsx [Client Component Browser]
+    ./src/app/events/[slug]/RegisterForm.tsx [Client Component Browser]
+    ./src/app/events/[slug]/RegisterForm.tsx [Server Component]
+    ./src/app/events/[slug]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/PaymentModal.tsx [Client Component SSR]
+    ./src/app/events/[slug]/RegisterForm.tsx [Client Component SSR]
+    ./src/app/events/[slug]/RegisterForm.tsx [Server Component]
+    ./src/app/events/[slug]/page.tsx [Server Component]
+
+
+ ⨯ [Error: Cannot find module 'critters'
+Require stack:
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\post-process.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\render.js     
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\route-modules\pages\module.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\route-modules\pages\builtin\_error.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\load-default-error-components.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\dev\next-dev-server.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\next.js       
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\lib\start-server.js] {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+Error [ModuleBuildError]: ./src/components/PaymentModal.tsx:5:1
+Export default doesn't exist in target module
+  3 | import { useState, useEffect } from 'react';
+  4 | import { monnifyService, FestivalPaymentConfig, formatCurrency, calculateMonnifyFee } from '@/lib/monnify';
+> 5 | import Modal from '@/components/ui/Modal';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { useEventTracking } from '@/hooks/useAnalytics';
+  7 |
+  8 | interface PaymentModalProps {
+
+The export default was not found in module [project]/src/components/ui/Modal.tsx [app-client] (ecmascript).
+Did you mean to import Modal?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/PaymentModal.tsx [Client Component Browser]
+    ./src/app/events/[slug]/RegisterForm.tsx [Client Component Browser]
+    ./src/app/events/[slug]/RegisterForm.tsx [Server Component]
+    ./src/app/events/[slug]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/PaymentModal.tsx [Client Component SSR]
+    ./src/app/events/[slug]/RegisterForm.tsx [Client Component SSR]
+    ./src/app/events/[slug]/RegisterForm.tsx [Server Component]
+    ./src/app/events/[slug]/page.tsx [Server Component]
+
+
+
+./src/components/PaymentModal.tsx:5:1
+Export default doesn't exist in target module
+  3 | import { useState, useEffect } from 'react';
+  4 | import { monnifyService, FestivalPaymentConfig, formatCurrency, calculateMonnifyFee } from '@/lib/monnify';
+> 5 | import Modal from '@/components/ui/Modal';
+    | ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  6 | import { useEventTracking } from '@/hooks/useAnalytics';
+  7 |
+  8 | interface PaymentModalProps {
+
+The export default was not found in module [project]/src/components/ui/Modal.tsx [app-ssr] (ecmascript).
+Did you mean to import Modal?
+All exports of the module are statically known (It doesn't have dynamic exports). So it's known statically that the requested export doesn't exist.
+
+Import traces:
+  Client Component Browser:
+    ./src/components/PaymentModal.tsx [Client Component Browser]
+    ./src/app/events/[slug]/RegisterForm.tsx [Client Component Browser]
+    ./src/app/events/[slug]/RegisterForm.tsx [Server Component]
+    ./src/app/events/[slug]/page.tsx [Server Component]
+
+  Client Component SSR:
+    ./src/components/PaymentModal.tsx [Client Component SSR]
+    ./src/app/events/[slug]/RegisterForm.tsx [Client Component SSR]
+    ./src/app/events/[slug]/RegisterForm.tsx [Server Component]
+    ./src/app/events/[slug]/page.tsx [Server Component]
+
+
+    at <unknown> (ModuleBuildError: ./src/components/PaymentModal.tsx:5:1)
+    at <unknown> (./src/components/PaymentModal.tsx:5:1)
+ ⨯ [Error: Cannot find module 'critters'
+Require stack:
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\post-process.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\render.js     
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\route-modules\pages\module.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\route-modules\pages\builtin\_error.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\load-default-error-components.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\dev\next-dev-server.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\next.js       
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\lib\start-server.js] {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+[Error: Cannot find module 'critters'
+Require stack:
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\post-process.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\render.js     
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\route-modules\pages\module.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\route-modules\pages\builtin\_error.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\load-default-error-components.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\dev\next-dev-server.js
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\next.js       
+- C:\Users\Olatunji\Desktop\GroovyD app\groovy-december\node_modules\next\dist\server\lib\start-server.js] {
+  code: 'MODULE_NOT_FOUND',
+  requireStack: [Array]
+}
+ GET /events/kiddies-park 500 in 36129ms
+ GET /events/kiddies-park 500 in 14948ms
+ GET /favicon.ico 500 in 3648ms
+Google Analytics ID not found
+ GET /events 200 in 2399ms
+ GET / 200 in 4559ms

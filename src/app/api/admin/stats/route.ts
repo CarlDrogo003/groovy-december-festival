@@ -24,11 +24,17 @@ export async function GET(req: Request) {
   ];
 
   for (const t of tables) {
-    const { count, error } = await supabaseAdmin
-      .from(t)
-      .select("*", { count: "exact", head: true });
+    try {
+      const { count, error } = await supabaseAdmin
+        .from(t)
+        .select("*", { count: "exact", head: true });
 
-    counts[t] = error ? null : count;
+      counts[t] = error ? null : count;
+    } catch (err) {
+      // Handle case where table doesn't exist yet
+      console.log(`Table ${t} does not exist yet:`, err);
+      counts[t] = null;
+    }
   }
 
   // Try raffle_entries separately (might not exist)

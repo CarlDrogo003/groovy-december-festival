@@ -440,7 +440,7 @@ export default function RegistrationForm() {
                   <Input
                     value={formData.height}
                     onChange={(e) => handleInputChange('height', e.target.value)}
-                    placeholder="5'6\" or 168cm"
+                    placeholder="5'6&quot; or 168cm"
                     error={errors.height}
                   />
                 </div>
@@ -452,7 +452,7 @@ export default function RegistrationForm() {
                   <Input
                     value={formData.bust_chest}
                     onChange={(e) => handleInputChange('bust_chest', e.target.value)}
-                    placeholder="e.g. 34\""
+                    placeholder="e.g. 34&quot;"
                   />
                 </div>
                 
@@ -463,7 +463,7 @@ export default function RegistrationForm() {
                   <Input
                     value={formData.waist}
                     onChange={(e) => handleInputChange('waist', e.target.value)}
-                    placeholder="e.g. 26\""
+                    placeholder="e.g. 26&quot;"
                   />
                 </div>
                 
@@ -474,7 +474,7 @@ export default function RegistrationForm() {
                   <Input
                     value={formData.hips}
                     onChange={(e) => handleInputChange('hips', e.target.value)}
-                    placeholder="e.g. 36\""
+                    placeholder="e.g. 36&quot;"
                   />
                 </div>
                 

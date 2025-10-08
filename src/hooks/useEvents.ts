@@ -28,7 +28,7 @@ export interface CreateEventData {
   max_capacity?: number;
   registration_fee?: number;
   requires_approval?: boolean;
-  status?: 'draft' | 'published';
+  status?: 'draft' | 'published' | 'cancelled';
 }
 
 export interface UpdateEventData extends CreateEventData {
