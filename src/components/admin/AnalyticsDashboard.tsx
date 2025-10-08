@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { AdminAPI } from '@/lib/api';
+import { ClientAdminAPI } from '@/lib/clientAdminAPI';
 
 interface AnalyticsData {
   totalUsers: number;
@@ -40,7 +40,7 @@ export default function AnalyticsDashboard() {
 
   const loadAnalyticsData = async () => {
     try {
-      const { data, error } = await AdminAPI.getDashboardStats();
+      const { data, error } = await ClientAdminAPI.getDashboardStats();
       if (error) throw error;
       
       setAnalyticsData({
