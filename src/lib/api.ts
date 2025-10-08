@@ -1,6 +1,37 @@
 import { supabaseAdmin } from './supabaseAdminServer';
 import { supabase } from './supabaseClient';
+import { createServerComponentClient } from '@supabase/auth-helpers-nextjs';
+import { cookies } from 'next/headers';
 import type { Database } from '../types/database';
+
+// Server-side authentication utilities (for API routes and server components)
+export async function getServerUser() {
+  const supabase = createServerComponentClient<Database>({ cookies });
+  
+  try {
+    const { data: { user }, error } = await supabase.auth.getUser();
+    
+    if (error || !user) {
+      return { user: null, profile: null, error };
+    }
+
+    // Get user profile
+    const { data: profile, error: profileError } = await supabase
+      .from('profiles')
+      .select('*')
+      .eq('id', user.id)
+      .single();
+
+    return { 
+      user, 
+      profile: profile || null, 
+      error: profileError 
+    };
+  } catch (error) {
+    console.error('Server auth error:', error);
+    return { user: null, profile: null, error };
+  }
+}
 
 // Client-side authentication utilities
 export async function getClientUser() {
@@ -29,9 +60,9 @@ export async function getClientUser() {
   }
 }
 
-// Check if user has required role
+// Check if user has required role (server-side)
 export async function hasRole(requiredRoles: string | string[]) {
-  const { profile } = await getClientUser();
+  const { profile } = await getServerUser();
   
   if (!profile) return false;
   
