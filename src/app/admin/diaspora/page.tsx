@@ -1,6 +1,6 @@
 "use client";
 import { useState } from "react";
-import { useDiaspora, Tour, TourBooking } from "@/hooks/useDiaspora";
+import { useDiaspora } from "@/hooks/useDiaspora";
 
 export default function AdminDiaspora() {
   const { 
@@ -280,9 +280,9 @@ export default function AdminDiaspora() {
                       <h3 className="font-semibold text-lg">{tour.name}</h3>
                       <p className="text-green-600 font-medium">${tour.price_usd} - {tour.duration}</p>
                       <span className={`inline-block px-2 py-1 rounded-full text-xs mt-1 ${
-                        tour.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                        (tour as any).active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                       }`}>
-                        {tour.active ? 'Active' : 'Inactive'}
+                        {(tour as any).active ? 'Active' : 'Inactive'}
                       </span>
                     </div>
                     
@@ -293,10 +293,10 @@ export default function AdminDiaspora() {
                             id: tour.id,
                             name: tour.name,
                             price_usd: tour.price_usd,
-                            duration: tour.duration,
-                            description: tour.description,
-                            benefits: tour.benefits,
-                            active: tour.active,
+                            duration: tour.duration || '',
+                            description: tour.description || '',
+                            benefits: tour.benefits || [],
+                            active: (tour as any).active || true,
                           });
                           setIsEditing(true);
                         }}
@@ -318,7 +318,7 @@ export default function AdminDiaspora() {
                   <div>
                     <h4 className="font-medium mb-2">Benefits:</h4>
                     <ul className="list-disc list-inside space-y-1 text-sm text-gray-600">
-                      {tour.benefits.map((benefit, index) => (
+                      {(tour.benefits || []).map((benefit, index) => (
                         <li key={index}>{benefit}</li>
                       ))}
                     </ul>
@@ -343,7 +343,7 @@ export default function AdminDiaspora() {
             {['all', 'pending', 'confirmed', 'cancelled'].map((status) => (
               <button
                 key={status}
-                onClick={() => setBookingFilter(status as any)}
+                onClick={() => setBookingFilter(status as 'all' | 'pending' | 'confirmed' | 'cancelled')}
                 className={`px-4 py-2 rounded-lg capitalize ${
                   bookingFilter === status
                     ? 'bg-purple-600 text-white'
@@ -372,8 +372,8 @@ export default function AdminDiaspora() {
                       {booking.phone && <p className="text-gray-600">{booking.phone}</p>}
                     </div>
                     
-                    <span className={`px-2 py-1 rounded-full text-xs ${getStatusBadge(booking.status)}`}>
-                      {booking.status}
+                    <span className={`px-2 py-1 rounded-full text-xs ${getStatusBadge(booking.status || 'pending')}`}>
+                      {booking.status || 'pending'}
                     </span>
                   </div>
                   
@@ -418,7 +418,7 @@ export default function AdminDiaspora() {
               
               {filteredBookings.length === 0 && (
                 <p className="text-center text-gray-500 py-8">
-                  No bookings found for "{bookingFilter}" status.
+                  No bookings found for &quot;{bookingFilter}&quot; status.
                 </p>
               )}
             </div>
