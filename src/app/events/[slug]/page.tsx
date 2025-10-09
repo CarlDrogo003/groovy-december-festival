@@ -26,7 +26,7 @@ export default async function EventDetails({ params }: { params: Promise<{ slug:
       <p className="text-lg text-gray-800">{event.description}</p>
 
       {/* Registration Form */}
-      <RegisterForm eventId={event.id} />
+      <RegisterForm eventId={event.id} eventName={event.title} />
     </section>
   );
 }

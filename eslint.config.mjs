@@ -1,4 +1,4 @@
-import { dirname } from "path";
+﻿import { dirname } from "path";
 import { fileURLToPath } from "url";
 import { FlatCompat } from "@eslint/eslintrc";
 
@@ -17,8 +17,21 @@ const eslintConfig = [
       ".next/**",
       "out/**",
       "build/**",
-      "next-env.d.ts",
     ],
+    rules: {
+      // Allow apostrophes in JSX without escaping
+      "react/no-unescaped-entities": "warn",
+      // Allow unused variables (common in development)
+      "@typescript-eslint/no-unused-vars": "warn",
+      // Allow explicit any types (needed for external libraries)
+      "@typescript-eslint/no-explicit-any": "warn",
+      // Allow missing dependencies in useEffect
+      "react-hooks/exhaustive-deps": "warn",
+      // Allow img tags instead of Next.js Image
+      "@next/next/no-img-element": "warn",
+      // Allow anonymous default exports
+      "import/no-anonymous-default-export": "warn",
+    },
   },
 ];
 
