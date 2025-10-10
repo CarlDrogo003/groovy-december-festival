@@ -31,10 +31,12 @@ export default function AdminEvents() {
       let success = false;
       if ('id' in data) {
         // Update existing event
-        success = await updateEvent(data);
+        const updatedEvent = await updateEvent(data);
+        success = !!updatedEvent; // This converts the result to a boolean
       } else {
         // Create new event
-        success = await createEvent(data);
+        const createdEvent = await createEvent(data);
+        success = !!createdEvent; // This converts the result to a boolean
       }
       return success;
     } catch (err) {

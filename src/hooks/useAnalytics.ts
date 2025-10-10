@@ -1,19 +1,21 @@
 'use client';
 
 import { useEffect } from 'react';
-import { usePathname, useSearchParams } from 'next/navigation';
+import { usePathname } from 'next/navigation';
+// import { useSearchParams } from 'next/navigation'; // Commented out for deployment
 import { trackPageView, trackEvent, analyticsEvents } from '@/lib/analytics';
 import { useAuth } from '@/contexts/AuthContext';
 
 // Hook for automatic page tracking
 export function usePageTracking() {
   const pathname = usePathname();
-  const searchParams = useSearchParams();
+  // const searchParams = useSearchParams(); // Commented out for deployment
+  const searchParams = null; // Neutralized with default value
   const { user, profile } = useAuth();
 
   useEffect(() => {
     // Track page views automatically
-    const url = pathname + (searchParams.toString() ? `?${searchParams.toString()}` : '');
+    const url = pathname; //+ (searchParams ? `?${searchParams.toString()}` : '');
     trackPageView(url);
 
     // Track section visits for festival analytics
@@ -30,7 +32,7 @@ export function usePageTracking() {
         });
       });
     }
-  }, [pathname, searchParams, user, profile]);
+  }, [pathname, user, profile]); // Removed searchParams dependency
 }
 
 // Hook for event tracking with user context

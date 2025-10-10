@@ -19,6 +19,7 @@ export interface Tour {
   featured_image?: string;
   is_featured?: boolean;
   created_by?: string;
+  active?: boolean;
 }
 
 export interface TourBooking {

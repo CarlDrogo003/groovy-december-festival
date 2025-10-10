@@ -280,9 +280,9 @@ export default function AdminDiaspora() {
                       <h3 className="font-semibold text-lg">{tour.name}</h3>
                       <p className="text-green-600 font-medium">${tour.price_usd} - {tour.duration}</p>
                       <span className={`inline-block px-2 py-1 rounded-full text-xs mt-1 ${
-                        (tour as any).active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
+                        tour.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'
                       }`}>
-                        {(tour as any).active ? 'Active' : 'Inactive'}
+                        {tour.active ? 'Active' : 'Inactive'}
                       </span>
                     </div>
                     
@@ -296,7 +296,7 @@ export default function AdminDiaspora() {
                             duration: tour.duration || '',
                             description: tour.description || '',
                             benefits: tour.benefits || [],
-                            active: (tour as any).active || true,
+                            active: tour.active || true,
                           });
                           setIsEditing(true);
                         }}

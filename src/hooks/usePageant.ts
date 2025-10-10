@@ -8,6 +8,7 @@ export interface Contestant {
   stage_name?: string;
   email: string;
   phone?: string;
+  age?: number;
   date_of_birth?: string;
   place_of_birth?: string;
   nationality?: string;
@@ -22,6 +23,7 @@ export interface Contestant {
   dress_size?: string;
   languages?: string;
   biography?: string;
+  bio?: string;
   why?: string;
   platform?: string;
   achievements?: string;

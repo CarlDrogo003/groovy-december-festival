@@ -70,20 +70,15 @@ export function PaymentButton({
 
       // Initialize payment
       await monnifyPaymentService.initializePayment({
-        amount,
-        customerName,
-        customerEmail,
-        paymentDescription: description,
-        paymentType,
+        type: paymentType as 'event_registration' | 'vendor_booth' | 'pageant_application' | 'general',
         itemId,
         itemName,
-        onSuccess: (response) => {
-          onPaymentSuccess?.(response);
+        customerDetails: {
+          fullName: customerName,
+          email: customerEmail,
         },
-        onError: (error) => {
-          trackEventPaymentFailed(paymentType, amount, error);
-          onPaymentError?.(error);
-        }
+        amount,
+        description,
       });
       
     } catch (error) {

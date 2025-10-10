@@ -78,7 +78,7 @@ export async function PATCH(req: Request) {
   // Add admin tracking for status changes
   if (updates.status === 'approved') {
     updates.approved_at = new Date().toISOString();
-    updates.approved_by = v.user.id; // If available from auth
+    updates.approved_by = v.user?.id || null; // If available from auth
   }
 
   const { data, error } = await supabaseAdmin

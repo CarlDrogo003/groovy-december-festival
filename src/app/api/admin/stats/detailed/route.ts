@@ -82,15 +82,21 @@ export async function GET(req: Request) {
       popularEvents,
       pageantRevenue,
       tourRevenue,
-    ] = await Promise.all(statsPromises.map(p => p.catch(err => ({ count: 0, data: [], error: err }))));
+    ] = await Promise.all(statsPromises.map(async (p) => {
+      try {
+        return await p;
+      } catch (err: any) {
+        return { count: 0, data: [], error: err };
+      }
+    }));
 
     // Calculate total revenue
     const pageantTotal = Array.isArray(pageantRevenue.data) 
-      ? pageantRevenue.data.reduce((sum, item) => sum + (item.payment_amount || 0), 0)
+      ? pageantRevenue.data.reduce((sum, item: any) => sum + (item.payment_amount || 0), 0)
       : 0;
 
     const tourTotal = Array.isArray(tourRevenue.data)
-      ? tourRevenue.data.reduce((sum, item) => sum + (item.total_amount || 0), 0)
+      ? tourRevenue.data.reduce((sum, item: any) => sum + (item.total_amount || 0), 0)
       : 0;
 
     const stats = {
@@ -103,8 +109,8 @@ export async function GET(req: Request) {
       total_revenue: pageantTotal + tourTotal,
       popular_events: Array.isArray(popularEvents.data) 
         ? popularEvents.data.map(event => ({
-            event_name: event.title,
-            registration_count: event.current_registrations || 0
+            event_name: (event as any).title || 'Unknown Event',
+            registration_count: (event as any).current_registrations || 0
           }))
         : [],
     };

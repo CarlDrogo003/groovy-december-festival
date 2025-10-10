@@ -274,7 +274,7 @@ export default function AdminPageant() {
               )}
               
               <div className="space-y-1 text-sm text-gray-600 mb-4">
-                <p>Age: {contestant.age}</p>
+                <p>Age: {contestant.age || 'Not specified'}</p>
                 <p>Email: {contestant.email}</p>
                 <p>Phone: {contestant.phone}</p>
                 <p className="line-clamp-2">{contestant.bio}</p>
@@ -314,10 +314,10 @@ export default function AdminPageant() {
                         id: contestant.id,
                         full_name: contestant.full_name,
                         email: contestant.email,
-                        phone: contestant.phone,
-                        age: contestant.age,
-                        bio: contestant.bio,
-                        status: contestant.status || 'pending',
+                        phone: contestant.phone || '',
+                        age: contestant.age || 18,
+                        bio: contestant.bio || '',
+                        status: (contestant.status === 'withdrawn' ? 'pending' : contestant.status) || 'pending',
                       });
                       setIsEditing(true);
                     }}

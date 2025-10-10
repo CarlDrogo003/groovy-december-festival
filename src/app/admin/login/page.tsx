@@ -8,7 +8,7 @@ export default function AdminLogin() {
   const [loading, setLoading] = useState(false);
   const router = useRouter();
 
-  const handleMagicLink = async (e) => {
+  const handleMagicLink = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     await supabase.auth.signInWithOtp({ email }); // magic link
