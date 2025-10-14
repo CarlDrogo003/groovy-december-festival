@@ -266,7 +266,7 @@ export const analyticsEvents = {
       currency: 'NGN',
       value: amount,
       payment_type: paymentType,
-      payment_method: paymentMethod || 'monnify',
+      payment_method: paymentMethod || 'paystack',
     });
   },
 
@@ -277,7 +277,7 @@ export const analyticsEvents = {
       currency: 'NGN', 
       value: amount,
       payment_type: paymentType,
-      payment_method: paymentMethod || 'monnify',
+      payment_method: paymentMethod || 'paystack',
     });
   },
 
@@ -287,7 +287,7 @@ export const analyticsEvents = {
       currency: 'NGN',
       value: amount,
       payment_type: paymentType,
-      payment_method: paymentMethod || 'monnify',
+      payment_method: paymentMethod || 'paystack',
       error_message: errorMessage,
     });
   },
@@ -298,7 +298,7 @@ export const analyticsEvents = {
       currency: 'NGN',
       value: amount,
       payment_type: paymentType,
-      payment_method: paymentMethod || 'monnify',
+      payment_method: paymentMethod || 'paystack',
     });
   },
 };
@@ -393,7 +393,7 @@ export const ecommerceEvents = {
       currency: 'NGN',
       value: amount,
       payment_type: paymentType,
-      payment_method: paymentMethod || 'monnify',
+      payment_method: paymentMethod || 'paystack',
     });
   },
 
@@ -404,7 +404,7 @@ export const ecommerceEvents = {
       currency: 'NGN', 
       value: amount,
       payment_type: paymentType,
-      payment_method: paymentMethod || 'monnify',
+      payment_method: paymentMethod || 'paystack',
     });
   },
 
@@ -414,7 +414,7 @@ export const ecommerceEvents = {
       currency: 'NGN',
       value: amount,
       payment_type: paymentType,
-      payment_method: paymentMethod || 'monnify',
+      payment_method: paymentMethod || 'paystack',
       error_message: errorMessage,
     });
   },

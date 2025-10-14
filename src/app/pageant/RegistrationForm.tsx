@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { useEventTracking } from "@/hooks/useAnalytics";
 import { PaymentButton } from "@/components/PaymentButton";
 import { PaymentModal } from "@/components/PaymentModal";
-import { monnifyPaymentService } from "@/lib/monnify";
+import { paystackService } from "@/lib/paystack";
 
 interface ContestantFormData {
   full_name: string;
@@ -326,18 +326,18 @@ export default function RegistrationForm() {
             <div className="flex justify-between items-center mb-2">
               <span className="text-pink-700">Processing Fee</span>
               <span className="font-bold text-pink-900">
-                ₦{monnifyPaymentService.calculateFee(PAGEANT_FEE).toLocaleString()}
+                ₦{paystackService.calculatePaystackFee(PAGEANT_FEE).toLocaleString()}
               </span>
             </div>
             <hr className="border-pink-200 my-2" />
             <div className="flex justify-between items-center">
               <span className="font-semibold text-pink-700">Total</span>
               <span className="font-bold text-pink-900 text-lg">
-                ₦{(PAGEANT_FEE + monnifyPaymentService.calculateFee(PAGEANT_FEE)).toLocaleString()}
+                ₦{(PAGEANT_FEE + paystackService.calculatePaystackFee(PAGEANT_FEE)).toLocaleString()}
               </span>
             </div>
             <p className="text-xs text-pink-600 mt-2">
-              Secure payment processed by Monnify. All major payment methods accepted.
+              Secure payment processed by Paystack. All major payment methods accepted.
             </p>
           </div>
 
@@ -392,8 +392,8 @@ export default function RegistrationForm() {
           onPaymentError={handlePaymentError}
           paymentBreakdown={{
             subtotal: PAGEANT_FEE,
-            fee: monnifyPaymentService.calculateFee(PAGEANT_FEE),
-            total: PAGEANT_FEE + monnifyPaymentService.calculateFee(PAGEANT_FEE)
+            fee: paystackService.calculatePaystackFee(PAGEANT_FEE),
+            total: PAGEANT_FEE + paystackService.calculatePaystackFee(PAGEANT_FEE)
           }}
         />
       )}

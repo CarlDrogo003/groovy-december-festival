@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { monnifyPaymentService, formatCurrency } from '@/lib/monnify';
+import { paystackService, formatCurrency, calculatePaystackFee } from '@/lib/paystack';
 import { Modal } from '@/components/ui/Modal';
 import { useEventTracking } from '@/hooks/useAnalytics';
 
@@ -51,18 +51,18 @@ export function PaymentModal({
   const safeAmount = amount || 0;
   const breakdown = paymentBreakdown || {
     subtotal: safeAmount,
-    fee: monnifyPaymentService.calculateFee(safeAmount),
-    total: safeAmount + monnifyPaymentService.calculateFee(safeAmount)
+    fee: calculatePaystackFee(safeAmount),
+    total: safeAmount + calculatePaystackFee(safeAmount)
   };
 
   useEffect(() => {
     if (isOpen) {
       const loadSDK = async () => {
         try {
-          await monnifyPaymentService.loadSDK();
+          await paystackService.loadSDK();
           setSdkReady(true);
         } catch (error) {
-          console.error('Failed to load Monnify SDK:', error);
+          console.error('Failed to load Paystack SDK:', error);
         }
       };
       loadSDK();
@@ -82,7 +82,7 @@ export function PaymentModal({
       trackEventPaymentStart(paymentType || 'unknown', safeAmount);
 
       // Initialize payment
-      await monnifyPaymentService.initializePayment({
+      await paystackService.initializeFestivalPayment({
         type: (paymentType || 'general') as any,
         itemId: itemId || 'unknown',
         itemName: itemName || 'Payment',
@@ -252,7 +252,7 @@ export function PaymentModal({
             <svg className="w-4 h-4 text-green-600" fill="currentColor" viewBox="0 0 20 20">
               <path fillRule="evenodd" d="M5 9V7a5 5 0 0110 0v2a2 2 0 012 2v5a2 2 0 01-2 2H5a2 2 0 01-2-2v-5a2 2 0 012-2zm8-2v2H7V7a3 3 0 016 0z" clipRule="evenodd" />
             </svg>
-            <span>Secured by Monnify - PCI DSS Compliant</span>
+            <span>Secured by Paystack - PCI DSS Compliant</span>
           </div>
         </div>
       </div>

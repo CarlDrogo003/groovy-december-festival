@@ -5,47 +5,44 @@ import crypto from 'crypto';
 export async function POST(request: NextRequest) {
   try {
     const webhookData = await request.json();
-    const signature = request.headers.get('monnify-signature');
+    const signature = request.headers.get('x-paystack-signature');
 
     // Verify webhook signature for security
-    if (!verifyWebhookSignature(webhookData, signature)) {
-      console.error('Invalid webhook signature');
+    if (!verifyPaystackWebhook(webhookData, signature)) {
+      console.error('Invalid Paystack webhook signature');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    console.log('Monnify webhook received:', webhookData);
+    console.log('Paystack webhook received:', webhookData);
 
-    const {
-      eventType,
-      eventData,
-    } = webhookData;
+    const { event, data } = webhookData;
 
     // Handle different webhook events
-    switch (eventType) {
-      case 'SUCCESSFUL_TRANSACTION':
-        await handleSuccessfulTransaction(eventData);
+    switch (event) {
+      case 'charge.success':
+        await handleSuccessfulPayment(data);
         break;
       
-      case 'FAILED_TRANSACTION':
-        await handleFailedTransaction(eventData);
+      case 'charge.failed':
+        await handleFailedPayment(data);
         break;
 
-      case 'OVERPAID_TRANSACTION':
-        await handleOverpaidTransaction(eventData);
+      case 'transfer.success':
+        await handleSuccessfulTransfer(data);
         break;
 
-      case 'PARTIALLY_PAID_TRANSACTION':
-        await handlePartiallyPaidTransaction(eventData);
+      case 'transfer.failed':
+        await handleFailedTransfer(data);
         break;
 
       default:
-        console.log('Unhandled webhook event type:', eventType);
+        console.log('Unhandled Paystack webhook event:', event);
     }
 
     return NextResponse.json({ status: 'success' });
 
   } catch (error) {
-    console.error('Monnify webhook error:', error);
+    console.error('Paystack webhook error:', error);
     return NextResponse.json(
       { error: 'Webhook processing failed' },
       { status: 500 }
@@ -53,54 +50,56 @@ export async function POST(request: NextRequest) {
   }
 }
 
-function verifyWebhookSignature(payload: any, signature: string | null): boolean {
-  if (!signature || !process.env.MONNIFY_SECRET_KEY) {
+function verifyPaystackWebhook(payload: any, signature: string | null): boolean {
+  if (!signature || !process.env.PAYSTACK_SECRET_KEY) {
     return false;
   }
 
   try {
     const payloadString = JSON.stringify(payload);
     const hash = crypto
-      .createHmac('sha512', process.env.MONNIFY_SECRET_KEY)
+      .createHmac('sha512', process.env.PAYSTACK_SECRET_KEY)
       .update(payloadString)
       .digest('hex');
 
     return hash === signature;
   } catch (error) {
-    console.error('Signature verification error:', error);
+    console.error('Paystack signature verification error:', error);
     return false;
   }
 }
 
-async function handleSuccessfulTransaction(eventData: any) {
+async function handleSuccessfulPayment(eventData: any) {
   const {
-    transactionReference,
-    paymentReference,
-    amountPaid,
-    totalPayable,
-    settlementAmount,
-    paidOn,
-    paymentMethod,
+    id: transactionId,
+    reference: paymentReference,
+    amount,
+    fees,
+    paid_at: paidAt,
+    channel: paymentMethod,
     currency,
-    paymentDescription,
-    metaData,
+    metadata,
     customer,
   } = eventData;
 
   try {
+    // Convert amount from kobo to naira
+    const amountInNaira = amount / 100;
+    const feesInNaira = fees ? fees / 100 : 0;
+
     // Update payment record in database
     const { error: updateError } = await supabaseAdmin
       .from('payments')
       .update({
         payment_status: 'PAID',
-        amount_paid: parseFloat(amountPaid),
-        settlement_amount: parseFloat(settlementAmount),
+        amount_paid: amountInNaira,
+        fee: feesInNaira,
         payment_method: paymentMethod,
-        completed_on: paidOn,
+        completed_on: paidAt,
         webhook_verified: true,
         updated_at: new Date().toISOString(),
       })
-      .eq('transaction_reference', transactionReference);
+      .eq('payment_reference', paymentReference);
 
     if (updateError) {
       console.error('Failed to update payment record:', updateError);
@@ -111,7 +110,7 @@ async function handleSuccessfulTransaction(eventData: any) {
     const { data: payment } = await supabaseAdmin
       .from('payments')
       .select('payment_type, item_id, customer_email')
-      .eq('transaction_reference', transactionReference)
+      .eq('payment_reference', paymentReference)
       .single();
 
     if (payment) {
@@ -119,26 +118,26 @@ async function handleSuccessfulTransaction(eventData: any) {
       await updateRelatedRecordsOnSuccess(
         payment.payment_type,
         payment.item_id,
-        transactionReference
+        paymentReference
       );
 
       // Send confirmation email (implement email service)
       await sendPaymentConfirmationEmail(payment.customer_email, {
-        transactionReference,
-        amountPaid,
+        transactionReference: paymentReference,
+        amountPaid: amountInNaira.toString(),
         paymentType: payment.payment_type,
       });
     }
 
-    console.log('Successfully processed payment:', transactionReference);
+    console.log('Successfully processed Paystack payment:', paymentReference);
 
   } catch (error) {
     console.error('Error handling successful transaction:', error);
   }
 }
 
-async function handleFailedTransaction(eventData: any) {
-  const { transactionReference } = eventData;
+async function handleFailedPayment(eventData: any) {
+  const { reference: paymentReference } = eventData;
 
   try {
     await supabaseAdmin
@@ -148,61 +147,47 @@ async function handleFailedTransaction(eventData: any) {
         webhook_verified: true,
         updated_at: new Date().toISOString(),
       })
-      .eq('transaction_reference', transactionReference);
+      .eq('payment_reference', paymentReference);
 
-    console.log('Payment failed:', transactionReference);
+    console.log('Paystack payment failed:', paymentReference);
 
   } catch (error) {
-    console.error('Error handling failed transaction:', error);
+    console.error('Error handling failed Paystack payment:', error);
   }
 }
 
-async function handleOverpaidTransaction(eventData: any) {
-  const { transactionReference, amountPaid, totalPayable } = eventData;
+async function handleSuccessfulTransfer(eventData: any) {
+  const { reference, amount, recipient } = eventData;
 
   try {
-    await supabaseAdmin
-      .from('payments')
-      .update({
-        payment_status: 'OVERPAID',
-        amount_paid: parseFloat(amountPaid),
-        webhook_verified: true,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('transaction_reference', transactionReference);
-
-    // Handle overpayment - could trigger refund process
-    console.log('Overpayment detected:', transactionReference, {
-      paid: amountPaid,
-      expected: totalPayable,
+    // Log successful transfer for audit purposes
+    console.log('Paystack transfer successful:', {
+      reference,
+      amount: amount / 100, // Convert from kobo
+      recipient,
     });
 
+    // Additional transfer handling logic can be added here
+    
   } catch (error) {
-    console.error('Error handling overpaid transaction:', error);
+    console.error('Error handling successful transfer:', error);
   }
 }
 
-async function handlePartiallyPaidTransaction(eventData: any) {
-  const { transactionReference, amountPaid, totalPayable } = eventData;
+async function handleFailedTransfer(eventData: any) {
+  const { reference, failure_reason } = eventData;
 
   try {
-    await supabaseAdmin
-      .from('payments')
-      .update({
-        payment_status: 'PARTIALLY_PAID',
-        amount_paid: parseFloat(amountPaid),
-        webhook_verified: true,
-        updated_at: new Date().toISOString(),
-      })
-      .eq('transaction_reference', transactionReference);
-
-    console.log('Partial payment received:', transactionReference, {
-      paid: amountPaid,
-      expected: totalPayable,
+    // Log failed transfer for audit purposes
+    console.log('Paystack transfer failed:', {
+      reference,
+      reason: failure_reason,
     });
 
+    // Additional failed transfer handling logic can be added here
+    
   } catch (error) {
-    console.error('Error handling partial payment:', error);
+    console.error('Error handling failed transfer:', error);
   }
 }
 

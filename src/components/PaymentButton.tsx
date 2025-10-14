@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { monnifyPaymentService } from '@/lib/monnify';
+import { paystackService } from '@/lib/paystack';
 import { useEventTracking } from '@/hooks/useAnalytics';
 
 interface PaymentButtonProps {
@@ -42,13 +42,13 @@ export function PaymentButton({
   const { trackEventPaymentStart, trackEventPaymentFailed } = useEventTracking();
 
   useEffect(() => {
-    // Load Monnify SDK on component mount
+    // Load Paystack SDK on component mount
     const loadSDK = async () => {
       try {
-        await monnifyPaymentService.loadSDK();
+        await paystackService.loadSDK();
         setSdkReady(true);
       } catch (error) {
-        console.error('Failed to load Monnify SDK:', error);
+        console.error('Failed to load Paystack SDK:', error);
       }
     };
 
@@ -69,7 +69,7 @@ export function PaymentButton({
       trackEventPaymentStart(paymentType, amount);
 
       // Initialize payment
-      await monnifyPaymentService.initializePayment({
+      await paystackService.initializeFestivalPayment({
         type: paymentType as 'event_registration' | 'vendor_booth' | 'pageant_application' | 'general',
         itemId,
         itemName,
@@ -99,7 +99,7 @@ export function PaymentButton({
     }).format(amount);
   };
 
-  const fee = monnifyPaymentService.calculateFee(amount);
+  const fee = paystackService.calculatePaystackFee(amount);
   const totalAmount = amount + fee;
 
   return (
@@ -160,7 +160,7 @@ export function PaymentButton({
 
       {/* Payment Methods Info */}
       <div className="mt-3 text-center">
-        <div className="text-xs text-gray-500 mb-2">Secure payments powered by Monnify</div>
+        <div className="text-xs text-gray-500 mb-2">Secure payments powered by Paystack</div>
         <div className="flex items-center justify-center gap-4 text-xs text-gray-400">
           <span className="flex items-center gap-1">
             🏦 <span>Bank Transfer</span>

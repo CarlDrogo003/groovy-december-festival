@@ -4,7 +4,7 @@ import { useState } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { PaymentButton } from "@/components/PaymentButton";
 import { PaymentModal } from "@/components/PaymentModal";
-import { monnifyPaymentService } from "@/lib/monnify";
+import { paystackService } from "@/lib/paystack";
 
 interface VendorFormData {
   business_name: string;
@@ -375,7 +375,7 @@ export default function VendorRegistrationForm() {
                 </span>
               </div>
               <p className="text-sm text-green-600 mt-2">
-                Payment will be processed securely through Monnify
+                Payment will be processed securely through Paystack
               </p>
             </div>
           )}
@@ -447,8 +447,8 @@ export default function VendorRegistrationForm() {
           onPaymentError={handlePaymentError}
           paymentBreakdown={{
             subtotal: selectedPackage.price,
-            fee: monnifyPaymentService.calculateFee(selectedPackage.price),
-            total: selectedPackage.price + monnifyPaymentService.calculateFee(selectedPackage.price)
+            fee: paystackService.calculatePaystackFee(selectedPackage.price),
+            total: selectedPackage.price + paystackService.calculatePaystackFee(selectedPackage.price)
           }}
         />
       )}

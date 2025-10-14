@@ -20,6 +20,7 @@ export interface Tour {
   is_featured?: boolean;
   created_by?: string;
   active?: boolean;
+  // Removed active field duplicate
 }
 
 export interface TourBooking {

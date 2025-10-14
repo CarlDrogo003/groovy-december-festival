@@ -5,7 +5,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { useEventTracking } from "@/hooks/useAnalytics";
 import PaymentButton from "@/components/PaymentButton";
 import PaymentModal from "@/components/PaymentModal";
-import { MonnifyPaymentService, FestivalPaymentConfig } from "@/lib/monnify";
+import { paystackService, FestivalPaymentConfig } from "@/lib/paystack";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface Event {
@@ -113,16 +113,22 @@ export default function RegisterForm({
   const createPaymentConfig = (): FestivalPaymentConfig | null => {
     if (!registrationData || !isPaidEvent) return null;
 
-    return MonnifyPaymentService.getEventRegistrationConfig({
-      id: eventId,
-      name: eventName,
-      fee: actualEventFee,
+    return {
+      type: 'event_registration',
+      itemId: eventId,
+      itemName: eventName,
       customerDetails: {
         fullName: registrationData.fullName,
         email: registrationData.email,
         phone: registrationData.phone,
-      }
-    });
+      },
+      amount: actualEventFee,
+      description: `Registration fee for ${eventName} - Groovy December Festival 2025`,
+      metadata: {
+        event_id: eventId,
+        event_name: eventName,
+      },
+    };
   };
 
   const handlePaymentSuccess = async (paymentResponse: any) => {
