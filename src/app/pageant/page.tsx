@@ -223,6 +223,10 @@ export default function PageantPage() {
               </div>
             </div>
           </div>
+          <div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
+            <p className="mb-2">&copy; 2025 Miss Groovy December Pageant</p>
+            <p className="text-sm text-gray-500">Organized by <span className="text-pink-400 font-semibold">Kenneth Handsome Lifestyle Ltd</span></p>
+          </div>
         </div>
       </section>
     </div>

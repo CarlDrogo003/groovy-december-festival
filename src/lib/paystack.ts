@@ -67,12 +67,32 @@ export class PaystackPaymentService {
     this.publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || '';
     this.secretKey = process.env.PAYSTACK_SECRET_KEY || '';
     this.baseUrl = 'https://api.paystack.co';
-    this.isProduction = process.env.NODE_ENV === 'production';
+    // More robust environment detection
+    this.isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
     
-    // Check configuration
+    // Enhanced configuration check with detailed logging
     if (!this.publicKey) {
-      console.warn('Payment system temporarily disabled - Paystack configuration not available');
+      console.error('URGENT: Paystack public key missing!', {
+        nodeEnv: process.env.NODE_ENV,
+        vercelEnv: process.env.VERCEL_ENV,
+        hasPublicKey: !!process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY,
+        hasSecretKey: !!process.env.PAYSTACK_SECRET_KEY,
+        keyPreview: this.publicKey ? `${this.publicKey.substring(0, 7)}...` : 'missing'
+      });
     }
+    
+    if (!this.secretKey && typeof window === 'undefined') {
+      console.error('URGENT: Paystack secret key missing for server operations!');
+    }
+
+    // Log test mode status
+    const isTestKey = this.publicKey.startsWith('pk_test_');
+    console.log('Paystack Configuration:', {
+      isProduction: this.isProduction,
+      isTestKey: isTestKey,
+      environment: process.env.NODE_ENV,
+      recommendedMode: isTestKey ? 'TEST MODE - Safe for testing' : 'LIVE MODE - Real transactions'
+    });
   }
 
   static getInstance(): PaystackPaymentService {
@@ -80,6 +100,25 @@ export class PaystackPaymentService {
       PaystackPaymentService.instance = new PaystackPaymentService();
     }
     return PaystackPaymentService.instance;
+  }
+
+  // Testing utility to check configuration
+  getTestConfiguration(): object {
+    const isTestKey = this.publicKey.startsWith('pk_test_');
+    return {
+      hasPublicKey: !!this.publicKey,
+      hasSecretKey: !!this.secretKey,
+      isTestMode: isTestKey,
+      environment: process.env.NODE_ENV,
+      vercelEnv: process.env.VERCEL_ENV,
+      keyPreview: this.publicKey ? `${this.publicKey.substring(0, 12)}...` : 'MISSING',
+      isProduction: this.isProduction,
+      recommendedTestCards: {
+        success: '4084084084084081',
+        failed: '4084084084084084',
+        pending: '4084084084084089'
+      }
+    };
   }
 
   // Load Paystack SDK
@@ -146,7 +185,7 @@ export class PaystackPaymentService {
     return Math.min(totalFee, 2000);
   }
 
-  // Initialize festival payment
+  // Initialize festival payment using server-side initialization (RECOMMENDED)
   async initializeFestivalPayment(config: FestivalPaymentConfig): Promise<void> {
     try {
       // Check if payment system is configured
@@ -154,13 +193,6 @@ export class PaystackPaymentService {
         // Show user-friendly message instead of console error
         alert('🚧 Payment system is temporarily unavailable.\n\nPlease contact us directly to complete your registration:\n📧 hello@groovydecember.ng\n📞 +234-xxx-xxx-xxxx');
         return;
-      }
-
-      // Ensure SDK is loaded
-      await this.loadSDK();
-
-      if (!window.PaystackPop) {
-        throw new Error('Paystack SDK not available');
       }
 
       // Generate unique payment reference
@@ -179,12 +211,11 @@ export class PaystackPaymentService {
         channels = ['bank_transfer', 'ussd', 'card', 'bank'];
       }
 
-      const paystackConfig: PaystackConfig = {
-        key: this.publicKey,
+      // Prepare initialization request
+      const initializationRequest = {
         email: config.customerDetails.email,
-        amount: this.convertToKobo(config.amount),
-        currency: 'NGN',
-        ref: paymentReference,
+        amount: config.amount, // Will be converted to kobo on server
+        reference: paymentReference,
         firstname,
         lastname,
         phone: config.customerDetails.phone,
@@ -197,22 +228,44 @@ export class PaystackPaymentService {
           description: config.description,
           ...config.metadata,
         },
-        callback: (response: PaystackResponse) => {
-          console.log('Payment completed:', response);
-          this.handlePaymentSuccess(response, config);
-        },
-        onClose: () => {
-          console.log('Payment closed by user');
-          this.handlePaymentClose(config);
-        },
       };
+
+      console.log('Initializing payment via server...', {
+        reference: paymentReference,
+        amount: config.amount,
+        email: config.customerDetails.email
+      });
 
       // Track payment start
       this.trackPaymentEvent('payment_started', config);
 
-      // Initialize Paystack payment
-      const handler = window.PaystackPop.setup(paystackConfig);
-      handler.openIframe();
+      // Initialize payment via server API
+      const response = await fetch('/api/payments/initialize', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(initializationRequest),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Payment initialization failed');
+      }
+
+      console.log('Payment initialized successfully:', result.data);
+
+      // Redirect to Paystack checkout page
+      if (result.data.authorization_url) {
+        // Store payment details for later verification
+        this.storePaymentDetails(config, result.data);
+        
+        // Redirect to Paystack checkout
+        window.location.href = result.data.authorization_url;
+      } else {
+        throw new Error('No authorization URL received from Paystack');
+      }
 
     } catch (error) {
       console.error('Payment initialization error:', error);
@@ -221,46 +274,40 @@ export class PaystackPaymentService {
     }
   }
 
-  // Handle successful payment
-  private async handlePaymentSuccess(response: PaystackResponse, config: FestivalPaymentConfig) {
+  // Store payment details in localStorage for verification after redirect
+  private storePaymentDetails(config: FestivalPaymentConfig, paymentData: any) {
     try {
-      // Track successful payment
-      this.trackPaymentEvent('payment_completed', config, {
-        reference: response.reference,
-        transaction_id: response.transaction,
-      });
-
-      // Verify payment on server
-      const verificationResult = await this.verifyPayment(response.reference);
+      const paymentDetails = {
+        config,
+        paymentData,
+        timestamp: Date.now(),
+        reference: paymentData.reference
+      };
       
-      if (verificationResult.success) {
-        // Save payment record to database
-        await this.savePaymentRecord(verificationResult.data, config);
-
-        // Send confirmation email/notification
-        await this.sendPaymentConfirmation(verificationResult.data, config);
-
-        // Show success message
-        this.showPaymentResult('success', verificationResult.data, config);
-      } else {
-        throw new Error('Payment verification failed');
-      }
-
+      localStorage.setItem('groovy_payment_pending', JSON.stringify(paymentDetails));
+      
+      // Auto-cleanup after 30 minutes
+      setTimeout(() => {
+        localStorage.removeItem('groovy_payment_pending');
+      }, 30 * 60 * 1000);
+      
     } catch (error) {
-      console.error('Post-payment processing error:', error);
-      this.showPaymentResult('success_with_warning', response, config);
+      console.warn('Could not store payment details:', error);
     }
   }
 
-  // Handle payment cancellation/closure
-  private handlePaymentClose(config: FestivalPaymentConfig) {
-    console.log('Payment closed by user');
-    
-    this.trackPaymentEvent('payment_cancelled', config, {
-      reason: 'User closed payment modal',
-    });
-
-    this.showPaymentResult('cancelled', null, config);
+  // Retrieve and clear stored payment details
+  getStoredPaymentDetails(): any {
+    try {
+      const stored = localStorage.getItem('groovy_payment_pending');
+      if (stored) {
+        localStorage.removeItem('groovy_payment_pending');
+        return JSON.parse(stored);
+      }
+    } catch (error) {
+      console.warn('Could not retrieve payment details:', error);
+    }
+    return null;
   }
 
   // Handle payment errors
@@ -272,93 +319,6 @@ export class PaystackPaymentService {
     });
 
     this.showPaymentResult('error', { message: error.message }, config);
-  }
-
-  // Verify payment on server
-  private async verifyPayment(reference: string): Promise<{ success: boolean; data?: any }> {
-    try {
-      const response = await fetch('/api/payments/verify', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ reference }),
-      });
-
-      const result = await response.json();
-      return result;
-    } catch (error) {
-      console.error('Payment verification error:', error);
-      return { success: false };
-    }
-  }
-
-  // Save payment record to database
-  private async savePaymentRecord(paymentData: any, config: FestivalPaymentConfig) {
-    try {
-      const paymentRecord = {
-        transaction_reference: paymentData.id,
-        payment_reference: paymentData.reference,
-        amount: this.convertFromKobo(paymentData.amount),
-        amount_paid: this.convertFromKobo(paymentData.amount),
-        fee: this.convertFromKobo(paymentData.fees || 0),
-        currency: paymentData.currency,
-        payment_method: paymentData.channel,
-        payment_status: paymentData.status.toUpperCase(),
-        customer_name: `${paymentData.customer.first_name} ${paymentData.customer.last_name}`,
-        customer_email: paymentData.customer.email,
-        payment_type: config.type,
-        item_id: config.itemId,
-        item_name: config.itemName,
-        metadata: {
-          ...paymentData.metadata,
-          festival_config: config.metadata,
-          paystack_data: paymentData,
-        },
-        completed_on: paymentData.paid_at,
-        created_on: paymentData.created_at,
-      };
-
-      // Make API call to save payment
-      const response = await fetch('/api/payments/record', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(paymentRecord),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to save payment record');
-      }
-
-      return await response.json();
-    } catch (error) {
-      console.error('Error saving payment record:', error);
-      throw error;
-    }
-  }
-
-  // Send payment confirmation
-  private async sendPaymentConfirmation(paymentData: any, config: FestivalPaymentConfig) {
-    try {
-      const response = await fetch('/api/payments/confirmation', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          payment: paymentData,
-          config: config,
-        }),
-      });
-
-      if (!response.ok) {
-        console.warn('Failed to send payment confirmation email');
-      }
-    } catch (error) {
-      console.warn('Error sending confirmation:', error);
-    }
   }
 
   // Track payment events

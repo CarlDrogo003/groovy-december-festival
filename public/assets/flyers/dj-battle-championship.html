@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DJ Battle Championship</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+            width: 600px;
+            height: 800px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .flyer-container {
+            padding: 40px;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+        
+        .event-title {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.2;
+            color: #00ff88;
+        }
+        
+        .event-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+            color: #ff6b9d;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .prize-section {
+            background: rgba(0,255,136,0.1);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(0,255,136,0.3);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .prize-amount {
+            font-size: 48px;
+            font-weight: bold;
+            color: #00ff88;
+            text-shadow: 0 0 20px rgba(0,255,136,0.5);
+            margin-bottom: 10px;
+        }
+        
+        .prize-text {
+            font-size: 20px;
+            margin-bottom: 15px;
+            color: #FFD700;
+        }
+        
+        .prize-breakdown {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .detail-item {
+            background: rgba(255,107,157,0.1);
+            border: 1px solid rgba(255,107,157,0.3);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .detail-label {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #ff6b9d;
+        }
+        
+        .detail-value {
+            font-size: 18px;
+            font-weight: bold;
+            color: #00ff88;
+        }
+        
+        .registration-section {
+            background: rgba(255,215,0,0.1);
+            border: 2px solid rgba(255,215,0,0.3);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .reg-fee {
+            font-size: 28px;
+            font-weight: bold;
+            color: #FFD700;
+            margin-bottom: 10px;
+            text-shadow: 0 0 15px rgba(255,215,0,0.5);
+        }
+        
+        .reg-text {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .cta-button {
+            background: linear-gradient(45deg, #00ff88, #ff6b9d);
+            border: none;
+            border-radius: 25px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: black;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 0 20px rgba(0,255,136,0.4);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .decorative-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .neon-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: transparent;
+            border: 2px solid;
+        }
+        
+        .circle1 { 
+            width: 100px; 
+            height: 100px; 
+            top: 50px; 
+            right: -50px; 
+            border-color: #00ff88;
+            box-shadow: 0 0 20px rgba(0,255,136,0.3);
+        }
+        .circle2 { 
+            width: 150px; 
+            height: 150px; 
+            bottom: 100px; 
+            left: -75px; 
+            border-color: #ff6b9d;
+            box-shadow: 0 0 20px rgba(255,107,157,0.3);
+        }
+        .circle3 { 
+            width: 80px; 
+            height: 80px; 
+            top: 200px; 
+            left: 50px; 
+            border-color: #FFD700;
+            box-shadow: 0 0 20px rgba(255,215,0,0.3);
+        }
+        
+        .music-icon {
+            font-size: 60px;
+            opacity: 0.2;
+            position: absolute;
+            top: 150px;
+            right: 50px;
+            color: #00ff88;
+            text-shadow: 0 0 20px rgba(0,255,136,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="flyer-container">
+        <div class="decorative-elements">
+            <div class="neon-circle circle1"></div>
+            <div class="neon-circle circle2"></div>
+            <div class="neon-circle circle3"></div>
+            <div class="music-icon">🎧</div>
+        </div>
+        
+        <div class="header">
+            <div class="logo">GROOVY DECEMBER 2024</div>
+            <div class="event-title">DJ BATTLE<br>CHAMPIONSHIP</div>
+            <div class="event-subtitle">Drop the Beat, Win the Crown</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="prize-section">
+                <div class="prize-amount">₦2,500,000</div>
+                <div class="prize-text">TOTAL CASH PRIZES</div>
+                <div class="prize-breakdown">
+                    Champion DJ: ₦1,200,000 + Equipment<br>
+                    Runner-up: ₦800,000 + Studio Time<br>
+                    3rd Place: ₦500,000 + Booking Deal<br>
+                    Best Remix: Special Recognition
+                </div>
+            </div>
+            
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Battle Date</div>
+                    <div class="detail-value">Dec 22, 2024</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Battle Time</div>
+                    <div class="detail-value">6 Hours</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">DJ Slots</div>
+                    <div class="detail-value">24 DJs</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Rounds</div>
+                    <div class="detail-value">4 Stages</div>
+                </div>
+            </div>
+            
+            <div class="registration-section">
+                <div class="reg-fee">₦35,000</div>
+                <div class="reg-text">Entry Fee (Equipment Provided)</div>
+                <button class="cta-button">REGISTER NOW</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            www.groovydecember.ng • #GroovyBeats2024<br>
+            Music Arena, Lagos Island • Bring Your Best Set
+        </div>
+    </div>
+</body>
+</html>

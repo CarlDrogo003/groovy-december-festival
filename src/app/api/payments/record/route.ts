@@ -4,6 +4,15 @@ import { getServerUser } from '@/lib/api';
 
 export async function POST(request: NextRequest) {
   try {
+    // Log environment status for debugging
+    console.log('Payment API Environment Check:', {
+      nodeEnv: process.env.NODE_ENV,
+      vercelEnv: process.env.VERCEL_ENV,
+      hasSupabaseUrl: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+      hasSupabaseKey: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+      hasPaystackSecret: !!process.env.PAYSTACK_SECRET_KEY
+    });
+
     const paymentData = await request.json();
     
     // Validate required fields
@@ -77,9 +86,27 @@ export async function POST(request: NextRequest) {
       .single();
 
     if (paymentError) {
-      console.error('Database error:', paymentError);
+      console.error('Database error details:', {
+        error: paymentError,
+        code: paymentError.code,
+        message: paymentError.message,
+        details: paymentError.details,
+        hint: paymentError.hint,
+        paymentData: {
+          transaction_reference,
+          payment_reference,
+          customer_email,
+          amount: parseFloat(amount),
+          payment_type,
+          item_id
+        }
+      });
       return NextResponse.json(
-        { error: 'Failed to save payment record' },
+        { 
+          error: 'Failed to save payment record', 
+          details: paymentError.message,
+          code: paymentError.code 
+        },
         { status: 500 }
       );
     }

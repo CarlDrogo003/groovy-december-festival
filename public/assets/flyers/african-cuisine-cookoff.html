@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>African Cuisine Cook-Off</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #ff7f50 0%, #ff6b35 50%, #f7931e 100%);
+            width: 600px;
+            height: 800px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .flyer-container {
+            padding: 40px;
+            height: 100%;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+        
+        .event-title {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 20px 0;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            line-height: 1.2;
+        }
+        
+        .event-subtitle {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 20px;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .prize-section {
+            background: rgba(255,255,255,0.15);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .prize-amount {
+            font-size: 48px;
+            font-weight: bold;
+            color: #FFD700;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            margin-bottom: 10px;
+        }
+        
+        .prize-text {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+        
+        .prize-breakdown {
+            font-size: 14px;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        
+        .details-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .detail-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            text-align: center;
+        }
+        
+        .detail-label {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .detail-value {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .registration-section {
+            background: rgba(255,255,255,0.2);
+            border-radius: 20px;
+            padding: 25px;
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .reg-fee {
+            font-size: 28px;
+            font-weight: bold;
+            color: #FFD700;
+            margin-bottom: 10px;
+        }
+        
+        .reg-text {
+            font-size: 16px;
+            margin-bottom: 15px;
+        }
+        
+        .cta-button {
+            background: linear-gradient(45deg, #00b894, #e17055);
+            border: none;
+            border-radius: 25px;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 14px;
+            opacity: 0.8;
+        }
+        
+        .decorative-elements {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+        }
+        
+        .circle {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .circle1 { width: 110px; height: 110px; top: 70px; right: -55px; }
+        .circle2 { width: 160px; height: 160px; bottom: 120px; left: -80px; }
+        .circle3 { width: 95px; height: 95px; top: 220px; left: 55px; }
+        
+        .food-icon {
+            font-size: 60px;
+            opacity: 0.1;
+            position: absolute;
+            top: 160px;
+            right: 45px;
+        }
+    </style>
+</head>
+<body>
+    <div class="flyer-container">
+        <div class="decorative-elements">
+            <div class="circle circle1"></div>
+            <div class="circle circle2"></div>
+            <div class="circle circle3"></div>
+            <div class="food-icon">🍲</div>
+        </div>
+        
+        <div class="header">
+            <div class="logo">GROOVY DECEMBER 2024</div>
+            <div class="event-title">AFRICAN CUISINE<br>COOK-OFF</div>
+            <div class="event-subtitle">Celebrate Traditional Flavors & Innovation</div>
+        </div>
+        
+        <div class="main-content">
+            <div class="prize-section">
+                <div class="prize-amount">₦4,000,000</div>
+                <div class="prize-text">TOTAL PRIZE MONEY</div>
+                <div class="prize-breakdown">
+                    Master Chef: ₦2,000,000 + Restaurant Deal<br>
+                    Silver Spoon: ₦1,200,000 + Cookbook<br>
+                    Bronze Pot: ₦800,000 + Equipment<br>
+                    People's Choice: Special Award
+                </div>
+            </div>
+            
+            <div class="details-grid">
+                <div class="detail-item">
+                    <div class="detail-label">Cook Date</div>
+                    <div class="detail-value">Dec 18, 2024</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Cook Time</div>
+                    <div class="detail-value">5 Hours</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Contestants</div>
+                    <div class="detail-value">20 Chefs</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Judges</div>
+                    <div class="detail-value">8 Experts</div>
+                </div>
+            </div>
+            
+            <div class="registration-section">
+                <div class="reg-fee">₦40,000</div>
+                <div class="reg-text">Registration Fee (Ingredients Included)</div>
+                <button class="cta-button">REGISTER NOW</button>
+            </div>
+        </div>
+        
+        <div class="footer">
+            www.groovydecember.ng • #GroovyCuisine2024<br>
+            Culinary Center, Ikeja • Bring Your Secret Recipe
+        </div>
+    </div>
+</body>
+</html>

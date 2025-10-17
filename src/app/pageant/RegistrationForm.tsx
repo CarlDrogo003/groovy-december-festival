@@ -158,6 +158,28 @@ export default function RegistrationForm() {
     setLoading(false);
   };
 
+  // Create payment configuration for pageant application
+  const createPaymentConfig = () => {
+    if (!formData) return null;
+
+    return {
+      type: 'pageant_application' as const,
+      itemId: 'pageant_application',
+      itemName: 'Miss Groovy December 2024 Application',
+      customerDetails: {
+        fullName: formData.full_name || '',
+        email: formData.email || '',
+        phone: formData.phone || '',
+      },
+      amount: PAGEANT_FEE,
+      description: 'Miss Groovy December 2024 - Application Fee',
+      metadata: {
+        application_type: 'pageant',
+        age: formData.age,
+      },
+    };
+  };
+
   return (
     <div className="max-w-4xl mx-auto p-6">
       <div className="bg-white rounded-2xl shadow-xl p-8">
@@ -381,20 +403,9 @@ export default function RegistrationForm() {
         <PaymentModal
           isOpen={showPaymentModal}
           onClose={() => setShowPaymentModal(false)}
-          amount={PAGEANT_FEE}
-          description="Miss Groovy December 2024 - Application Fee"
-          customerEmail={formData.email || ""}
-          customerName={formData.full_name || ""}
-          paymentType="pageant_application"
-          itemId="pending"
-          itemName="Miss Groovy December Application"
+          paymentConfig={createPaymentConfig()}
           onPaymentSuccess={handlePaymentSuccess}
           onPaymentError={handlePaymentError}
-          paymentBreakdown={{
-            subtotal: PAGEANT_FEE,
-            fee: paystackService.calculatePaystackFee(PAGEANT_FEE),
-            total: PAGEANT_FEE + paystackService.calculatePaystackFee(PAGEANT_FEE)
-          }}
         />
       )}
     </div>

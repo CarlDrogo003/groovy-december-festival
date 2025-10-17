@@ -44,10 +44,18 @@ export default function HomePage() {
               explore, enjoy and experience...
             </p>
 
-            {/* Location */}
-            <p className="mt-4 text-lg text-gray-400">
-              Abuja, Nigeria • Seventeen Days of Culture, Business & Entertainment
-            </p>
+            {/* Location & Dates */}
+            <div className="mt-6 space-y-2">
+              <p className="text-lg text-gray-400">
+                📍 Abuja, Nigeria • 🗓️ December 15-31, 2025
+              </p>
+              <p className="text-sm text-green-300 font-medium">
+                Seventeen Days of Culture, Business & Entertainment
+              </p>
+              <p className="text-sm text-yellow-300">
+                🎵 Live Performances • 🎪 Cultural Shows • 🤝 Business Networking • 👑 Beauty Pageant
+              </p>
+            </div>
 
             {/* Stats */}
             <div className="mt-12 grid grid-cols-3 gap-8 sm:gap-12">
@@ -60,19 +68,25 @@ export default function HomePage() {
                 <div className="mt-2 text-sm font-medium text-gray-400">Events</div>
               </div>
               <div className="text-center">
-                <div className="text-3xl font-bold text-white sm:text-4xl">10K+</div>
+                <div className="text-3xl font-bold text-white sm:text-4xl">400K+</div>
                 <div className="mt-2 text-sm font-medium text-gray-400">Expected</div>
               </div>
             </div>
 
             {/* CTA Buttons */}
-            <div className="mt-12 flex items-center justify-center gap-x-6">
+            <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4">
               <Link
-                href="/events"
+                href="/tickets"
                 className="rounded-full bg-gradient-to-r from-green-600 to-red-600 px-8 py-3.5 text-sm font-semibold text-white shadow-lg hover:from-green-700 hover:to-red-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-green-600 transform hover:scale-105 transition-all duration-300"
               >
                 Get Tickets
               </Link>
+              <a
+                href="#raffle"
+                className="rounded-full bg-gradient-to-r from-yellow-500 to-orange-500 px-8 py-3.5 text-sm font-semibold text-white shadow-lg hover:from-yellow-600 hover:to-orange-600 transform hover:scale-105 transition-all duration-300 animate-pulse"
+              >
+                🛺 Win KEKE Every 2 Days!
+              </a>
               <Link
                 href="/about"
                 className="rounded-full border border-white/20 px-8 py-3.5 text-sm font-semibold text-white hover:bg-white/10 transition-all duration-300"
@@ -108,22 +122,94 @@ export default function HomePage() {
             </p>
           </div>
 
-          {/* Placeholder for upcoming performer announcements */}
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-4xl mx-auto">
-            {[1, 2, 3, 4].map((item) => (
-              <div key={item} className="aspect-square bg-gradient-to-br from-gray-100 to-gray-200 rounded-2xl flex items-center justify-center group hover:from-blue-50 hover:to-purple-50 transition-all duration-300">
-                <div className="text-center">
-                  <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full mx-auto mb-3 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
-                    <svg className="w-6 h-6 text-white" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M18 3a1 1 0 00-1.196-.98l-10 2A1 1 0 006 5v9.114A4.369 4.369 0 005 14c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V7.82l8-1.6v5.894A4.37 4.37 0 0015 12c-1.657 0-3 .895-3 2s1.343 2 3 2 3-.895 3-2V3z" />
-                    </svg>
-                  </div>
-                  <p className="text-sm font-medium text-gray-500 group-hover:text-gray-700 transition-colors">
-                    ANNOUNCED SOON
-                  </p>
+          {/* Featured Performers */}
+          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8 max-w-6xl mx-auto">
+            {/* Headliner */}
+            <div className="md:col-span-2 bg-gradient-to-br from-purple-600 to-blue-600 rounded-3xl p-8 text-white relative overflow-hidden group hover:scale-105 transition-all duration-300">
+              <div className="absolute top-0 right-0 bg-yellow-400 text-black px-3 py-1 rounded-bl-lg text-xs font-bold">
+                HEADLINER
+              </div>
+              <div className="relative z-10">
+                <div className="w-20 h-20 bg-white/20 rounded-full mx-auto mb-4 flex items-center justify-center text-3xl">
+                  🎤
+                </div>
+                <h3 className="text-2xl font-bold mb-2">BURNA BOY</h3>
+                <p className="text-purple-100 text-sm mb-4">Grammy Winner • African Giant</p>
+                <div className="flex justify-center space-x-2">
+                  <span className="bg-white/20 px-2 py-1 rounded text-xs">Afrobeats</span>
+                  <span className="bg-white/20 px-2 py-1 rounded text-xs">Dec 30</span>
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* Featured Artists */}
+            <div className="bg-gradient-to-br from-green-500 to-teal-600 rounded-3xl p-6 text-white group hover:scale-105 transition-all duration-300">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-white/20 rounded-full mx-auto mb-3 flex items-center justify-center text-2xl">
+                  🎵
+                </div>
+                <h3 className="text-lg font-bold mb-2">TIWA SAVAGE</h3>
+                <p className="text-green-100 text-xs mb-3">Queen of Afrobeats</p>
+                <span className="bg-white/20 px-2 py-1 rounded text-xs">Dec 28</span>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-orange-500 to-red-600 rounded-3xl p-6 text-white group hover:scale-105 transition-all duration-300">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-white/20 rounded-full mx-auto mb-3 flex items-center justify-center text-2xl">
+                  🎸
+                </div>
+                <h3 className="text-lg font-bold mb-2">DAVIDO</h3>
+                <p className="text-orange-100 text-xs mb-3">OBO • 30BG</p>
+                <span className="bg-white/20 px-2 py-1 rounded text-xs">Dec 29</span>
+              </div>
+            </div>
+
+            {/* Cultural Acts */}
+            <div className="bg-gradient-to-br from-yellow-500 to-orange-500 rounded-3xl p-6 text-white group hover:scale-105 transition-all duration-300">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-white/20 rounded-full mx-auto mb-3 flex items-center justify-center text-2xl">
+                  🥁
+                </div>
+                <h3 className="text-lg font-bold mb-2">FOLKLORE</h3>
+                <p className="text-yellow-100 text-xs mb-3">Traditional Dance</p>
+                <span className="bg-white/20 px-2 py-1 rounded text-xs">Daily</span>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-indigo-500 to-purple-600 rounded-3xl p-6 text-white group hover:scale-105 transition-all duration-300">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-white/20 rounded-full mx-auto mb-3 flex items-center justify-center text-2xl">
+                  🎭
+                </div>
+                <h3 className="text-lg font-bold mb-2">COMEDY</h3>
+                <p className="text-indigo-100 text-xs mb-3">Stand-up Shows</p>
+                <span className="bg-white/20 px-2 py-1 rounded text-xs">Dec 25</span>
+              </div>
+            </div>
+
+            <div className="bg-gradient-to-br from-pink-500 to-rose-600 rounded-3xl p-6 text-white group hover:scale-105 transition-all duration-300">
+              <div className="text-center">
+                <div className="w-16 h-16 bg-white/20 rounded-full mx-auto mb-3 flex items-center justify-center text-2xl">
+                  🎻
+                </div>
+                <h3 className="text-lg font-bold mb-2">ORCHESTRA</h3>
+                <p className="text-pink-100 text-xs mb-3">Classical Fusion</p>
+                <span className="bg-white/20 px-2 py-1 rounded text-xs">Dec 24</span>
+              </div>
+            </div>
+          </div>
+
+          {/* More Artists Coming Soon */}
+          <div className="mt-12 text-center">
+            <div className="inline-flex items-center bg-gradient-to-r from-gray-100 to-gray-200 rounded-full px-6 py-3">
+              <span className="text-gray-600 font-medium">+ 20 More Artists to be Announced</span>
+              <div className="ml-3 flex space-x-1">
+                <div className="w-2 h-2 bg-blue-500 rounded-full animate-bounce"></div>
+                <div className="w-2 h-2 bg-purple-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
+                <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+              </div>
+            </div>
           </div>
         </div>
       </section>
@@ -142,7 +228,7 @@ export default function HomePage() {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Attend Events */}
-            <Link href="/events" className="group">
+            <Link href="/tickets" className="group">
               <div className="bg-white border-2 border-gray-100 p-8 text-center rounded-2xl hover:border-blue-200 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1">
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl mx-auto mb-6 flex items-center justify-center group-hover:scale-110 transition-transform duration-300">
                   <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -224,8 +310,94 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Raffle Draw Section - Exciting manual event showcase */}
-      <section className="py-20 bg-gradient-to-br from-yellow-400 via-orange-500 to-red-600 relative overflow-hidden">
+      {/* Festival Highlights Section */}
+      <section className="py-20 bg-gradient-to-br from-gray-900 via-purple-900 to-blue-900 relative">
+        <div className="absolute inset-0 bg-black/20"></div>
+        
+        <div className="container mx-auto px-4 relative z-10">
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-black text-white mb-4">
+              WHY <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500">GROOVY DECEMBER?</span>
+            </h2>
+            <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+              Experience Africa's most comprehensive festival celebrating culture, business, and entertainment
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {/* Highlight 1: Scale */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-cyan-500 rounded-2xl mx-auto mb-6 flex items-center justify-center">
+                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4 text-center">17 DAYS OF CELEBRATION</h3>
+              <p className="text-gray-300 text-center">
+                The longest cultural festival in West Africa, featuring over 30 unique events across multiple venues
+              </p>
+            </div>
+
+            {/* Highlight 2: Diversity */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl mx-auto mb-6 flex items-center justify-center">
+                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4 text-center">MULTI-CULTURAL EXPERIENCE</h3>
+              <p className="text-gray-300 text-center">
+                Celebrating Nigerian diversity with performers and participants from all 36 states plus diaspora
+              </p>
+            </div>
+
+            {/* Highlight 3: Business */}
+            <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:bg-white/15 transition-all duration-300">
+              <div className="w-16 h-16 bg-gradient-to-br from-green-500 to-teal-500 rounded-2xl mx-auto mb-6 flex items-center justify-center">
+                <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M4 4a2 2 0 00-2 2v1h16V6a2 2 0 00-2-2H4zM18 9H2v5a2 2 0 002 2h12a2 2 0 002-2V9z" />
+                </svg>
+              </div>
+              <h3 className="text-xl font-bold text-white mb-4 text-center">BUSINESS NETWORKING</h3>
+              <p className="text-gray-300 text-center">
+                Connect with entrepreneurs, investors, and business leaders from across Africa and the diaspora
+              </p>
+            </div>
+          </div>
+
+          {/* Featured Numbers */}
+          <div className="mt-16 grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+            <div>
+              <div className="text-4xl font-bold text-yellow-400 mb-2">400K+</div>
+              <div className="text-gray-300">Expected Attendees</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-green-400 mb-2">500+</div>
+              <div className="text-gray-300">Vendors & Exhibitors</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-blue-400 mb-2">50+</div>
+              <div className="text-gray-300">Performing Artists</div>
+            </div>
+            <div>
+              <div className="text-4xl font-bold text-purple-400 mb-2">₦50M+</div>
+              <div className="text-gray-300">Prize Pool</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Raffle Draw Section - KEKE Grand Prize with Every 2 Days Draws */}
+      <section id="raffle" className="py-20 relative overflow-hidden">
+        {/* Background Image with Overlay */}
+        <div 
+          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          style={{
+            backgroundImage: `url('/assets/raffle-draw.jpg')`
+          }}
+        ></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-green-900/85 via-green-800/80 to-red-900/85"></div>
+        
         {/* Animated Background Elements */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-10 left-10 w-20 h-20 bg-white rounded-full animate-bounce"></div>
@@ -239,63 +411,102 @@ export default function HomePage() {
             {/* Live Badge */}
             <div className="inline-flex items-center space-x-2 bg-red-600 text-white px-6 py-3 rounded-full text-sm font-bold mb-6 animate-pulse">
               <div className="w-3 h-3 bg-white rounded-full animate-ping"></div>
-              <span>LIVE DRAW EVENT</span>
+              <span>EVERY 2 DAYS DRAW</span>
             </div>
 
             <h2 className="text-5xl md:text-6xl font-black text-white mb-6 drop-shadow-lg">
-              🎁 MEGA RAFFLE 🎁
+              🛺 WIN BRAND NEW KEKE 🛺
             </h2>
             <p className="text-xl md:text-2xl text-yellow-100 mb-8 max-w-3xl mx-auto font-semibold">
-              Win Amazing Prizes! Live Draw on New Year's Eve
+              Every 2 Days During Groovy December Festival!
             </p>
           </div>
 
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 mb-16">
-            {/* Grand Prize */}
-            <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 text-center shadow-2xl transform hover:scale-105 transition-all duration-300 border-4 border-yellow-300">
-              <div className="text-6xl mb-4">🏆</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">GRAND PRIZE</h3>
-              <div className="text-4xl font-black text-orange-600 mb-2">$10,000</div>
-              <p className="text-gray-600 font-semibold">Cash Prize + VIP Festival Package</p>
-            </div>
-
-            {/* Second Prize */}
-            <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 text-center shadow-2xl transform hover:scale-105 transition-all duration-300">
-              <div className="text-6xl mb-4">🥈</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">SECOND PRIZE</h3>
-              <div className="text-3xl font-black text-orange-600 mb-2">$5,000</div>
-              <p className="text-gray-600 font-semibold">Cash Prize + Festival Tickets</p>
-            </div>
-
-            {/* Third Prize */}
-            <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 text-center shadow-2xl transform hover:scale-105 transition-all duration-300">
-              <div className="text-6xl mb-4">🥉</div>
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">THIRD PRIZE</h3>
-              <div className="text-3xl font-black text-orange-600 mb-2">$2,500</div>
-              <p className="text-gray-600 font-semibold">Cash Prize + Merchandise</p>
+          {/* KEKE Prize Showcase */}
+          <div className="mb-16">
+            <div className="bg-white/95 backdrop-blur-sm rounded-3xl p-8 text-center shadow-2xl transform hover:scale-105 transition-all duration-300 border-4 border-yellow-300 max-w-2xl mx-auto">
+              <div className="text-8xl mb-6">🛺</div>
+              <h3 className="text-3xl font-bold text-gray-900 mb-4">BRAND NEW KEKE</h3>
+              <div className="text-2xl font-black text-green-600 mb-4">Auto Rickshaw/Tricycle</div>
+              <p className="text-gray-600 font-semibold mb-6">Professional commercial vehicle perfect for business or personal use</p>
+              
+              {/* Key Features */}
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
+                <div className="bg-green-100 p-3 rounded-lg">
+                  <div className="font-bold text-green-800">💪 Durable</div>
+                  <div className="text-green-600">Built to Last</div>
+                </div>
+                <div className="bg-blue-100 p-3 rounded-lg">
+                  <div className="font-bold text-blue-800">⛽ Efficient</div>
+                  <div className="text-blue-600">Low Fuel Cost</div>
+                </div>
+                <div className="bg-purple-100 p-3 rounded-lg">
+                  <div className="font-bold text-purple-800">💼 Business</div>
+                  <div className="text-purple-600">Income Ready</div>
+                </div>
+                <div className="bg-orange-100 p-3 rounded-lg">
+                  <div className="font-bold text-orange-800">🎯 Reliable</div>
+                  <div className="text-orange-600">Daily Transport</div>
+                </div>
+              </div>
             </div>
           </div>
 
-          {/* Draw Information */}
+          {/* Draw Schedule Information */}
           <div className="bg-white/20 backdrop-blur-sm rounded-3xl p-8 mb-12 border border-white/30">
             <div className="grid md:grid-cols-3 gap-8 text-center">
               <div>
                 <div className="text-4xl mb-3">📅</div>
-                <h4 className="text-xl font-bold text-white mb-2">DRAW DATE</h4>
-                <p className="text-yellow-100 font-semibold">December 31, 2025</p>
-                <p className="text-yellow-200 text-sm">11:30 PM (Live on Stage)</p>
+                <h4 className="text-xl font-bold text-white mb-2">DRAW FREQUENCY</h4>
+                <p className="text-yellow-100 font-semibold text-2xl">Every 2 Days</p>
+                <p className="text-yellow-200 text-sm">Multiple chances to win</p>
               </div>
               <div>
-                <div className="text-4xl mb-3">🎫</div>
-                <h4 className="text-xl font-bold text-white mb-2">TICKET PRICE</h4>
-                <p className="text-yellow-100 font-semibold text-2xl">₦1,000</p>
-                <p className="text-yellow-200 text-sm">Limited to 10,000 tickets</p>
+                <div className="text-4xl mb-3">🏧</div>
+                <h4 className="text-xl font-bold text-white mb-2">HOW TO QUALIFY</h4>
+                <p className="text-yellow-100 font-semibold">A Bank ATM qualifies you</p>
+                <p className="text-yellow-200 text-sm">Buy raffle tickets to enter</p>
               </div>
               <div>
                 <div className="text-4xl mb-3">🎯</div>
-                <h4 className="text-xl font-bold text-white mb-2">TOTAL PRIZES</h4>
-                <p className="text-yellow-100 font-semibold">50+ Winners</p>
-                <p className="text-yellow-200 text-sm">Including consolation prizes</p>
+                <h4 className="text-xl font-bold text-white mb-2">WIN STRATEGY</h4>
+                <p className="text-yellow-100 font-semibold">More tickets = More chances</p>
+                <p className="text-yellow-200 text-sm">Increase your winning odds</p>
+              </div>
+            </div>
+          </div>
+
+          {/* How It Works */}
+          <div className="bg-white/15 backdrop-blur-sm rounded-3xl p-8 mb-12 border border-white/20">
+            <h3 className="text-2xl font-bold text-white text-center mb-8">🎲 How to Participate</h3>
+            <div className="grid md:grid-cols-4 gap-6">
+              <div className="text-center">
+                <div className="bg-white/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-white">1</span>
+                </div>
+                <h4 className="font-bold text-white mb-2">Visit ATM</h4>
+                <p className="text-yellow-200 text-sm">Use any bank ATM to qualify for participation</p>
+              </div>
+              <div className="text-center">
+                <div className="bg-white/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-white">2</span>
+                </div>
+                <h4 className="font-bold text-white mb-2">Buy Tickets</h4>
+                <p className="text-yellow-200 text-sm">Purchase raffle tickets for the draw</p>
+              </div>
+              <div className="text-center">
+                <div className="bg-white/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-white">3</span>
+                </div>
+                <h4 className="font-bold text-white mb-2">Join Draws</h4>
+                <p className="text-yellow-200 text-sm">Participate in draws every 2 days</p>
+              </div>
+              <div className="text-center">
+                <div className="bg-white/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4">
+                  <span className="text-2xl font-bold text-white">4</span>
+                </div>
+                <h4 className="font-bold text-white mb-2">Win KEKE!</h4>
+                <p className="text-yellow-200 text-sm">Stand a chance to win brand new KEKE</p>
               </div>
             </div>
           </div>
@@ -304,26 +515,40 @@ export default function HomePage() {
           <div className="text-center">
             <div className="mb-8">
               <div className="inline-flex items-center space-x-4 bg-white/10 backdrop-blur-sm rounded-full px-8 py-4 border border-white/20">
-                <span className="text-white font-semibold">Tickets Available:</span>
-                <span className="text-2xl font-black text-yellow-300">7,543 / 10,000</span>
+                <span className="text-white font-semibold">Next Draw:</span>
+                <span className="text-2xl font-black text-yellow-300">2 Days</span>
               </div>
             </div>
             
-            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
-              <button className="bg-white text-gray-900 px-10 py-4 rounded-full text-xl font-black hover:bg-gray-100 transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-3xl min-w-[200px] border-2 border-yellow-300">
-                🎫 BUY TICKETS
+            <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-8">
+              <button className="bg-yellow-400 text-gray-900 px-10 py-4 rounded-full text-xl font-black hover:bg-yellow-300 transform hover:scale-105 transition-all duration-300 shadow-2xl hover:shadow-3xl min-w-[200px] border-2 border-white">
+                🎫 BUY RAFFLE TICKETS
               </button>
-              <div className="flex items-center space-x-2 text-white">
-                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7-4a1 1 0 11-2 0 1 1 0 012 0zM9 9a1 1 0 000 2v3a1 1 0 001 1h1a1 1 0 100-2v-3a1 1 0 00-1-1H9z" clipRule="evenodd" />
-                </svg>
-                <span className="text-sm">Must be present to win grand prize</span>
+              <button className="bg-white/20 text-white px-8 py-4 rounded-full text-lg font-semibold hover:bg-white/30 transform hover:scale-105 transition-all duration-300 border border-white/30">
+                📋 View Draw Rules
+              </button>
+            </div>
+
+            {/* Contact Information */}
+            <div className="bg-white/15 backdrop-blur-sm rounded-2xl p-6 max-w-2xl mx-auto mb-8">
+              <h4 className="text-lg font-bold text-white mb-4">📞 For More Information</h4>
+              <div className="grid md:grid-cols-2 gap-4 text-sm">
+                <div>
+                  <p className="text-yellow-200 font-semibold">📱 Call Us:</p>
+                  <p className="text-white">08067469060</p>
+                  <p className="text-white">08030596162</p>
+                </div>
+                <div>
+                  <p className="text-yellow-200 font-semibold">🌐 Online:</p>
+                  <p className="text-white">www.groovydecember.ng</p>
+                  <p className="text-white">hello@groovydecember.ng</p>
+                </div>
               </div>
             </div>
 
-            <div className="mt-8 text-center text-white/80 text-sm">
-              <p>🎪 <strong>Live Draw Experience:</strong> Join us on New Year's Eve for the most exciting raffle draw in Africa!</p>
-              <p className="mt-2">📱 <strong>Digital Tickets:</strong> Secure, verified, and instantly delivered to your phone</p>
+            <div className="text-center text-white/80 text-sm">
+              <p>🎪 <strong>Festival Integration:</strong> Combine your festival experience with amazing winning opportunities!</p>
+              <p className="mt-2">� <strong>Secure & Verified:</strong> All draws are conducted transparently with official supervision</p>
             </div>
           </div>
         </div>
@@ -436,12 +661,32 @@ export default function HomePage() {
             BIGGEST CELEBRATION?
           </h2>
           
-          <p className="text-xl mb-8 text-gray-300 max-w-2xl mx-auto">
-            Don't miss out on seventeen days of unforgettable experiences in Abuja, Nigeria
-          </p>
+          <div className="mb-8 space-y-4">
+            <p className="text-xl text-gray-300 max-w-2xl mx-auto">
+              Don't miss out on seventeen days of unforgettable experiences in Abuja, Nigeria
+            </p>
+            <div className="flex flex-wrap justify-center gap-6 text-sm">
+              <div className="flex items-center space-x-2">
+                <span className="text-green-400">✓</span>
+                <span>World-class performers</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="text-green-400">✓</span>
+                <span>Business networking</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="text-green-400">✓</span>
+                <span>Cultural experiences</span>
+              </div>
+              <div className="flex items-center space-x-2">
+                <span className="text-green-400">✓</span>
+                <span>₦50M+ prizes</span>
+              </div>
+            </div>
+          </div>
           
           <div className="flex gap-6 justify-center flex-wrap">
-            <Link href="/events" className="inline-block bg-gradient-to-r from-green-600 to-red-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-green-700 hover:to-red-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
+            <Link href="/tickets" className="inline-block bg-gradient-to-r from-green-600 to-red-600 text-white px-8 py-4 rounded-xl font-bold text-lg hover:from-green-700 hover:to-red-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl">
               GET TICKETS NOW
             </Link>
             <Link href="/contact" className="inline-block border-2 border-white/30 text-white px-8 py-4 rounded-xl font-bold text-lg hover:bg-white hover:text-gray-900 transition-all duration-300">
@@ -481,7 +726,8 @@ export default function HomePage() {
             </div>
           </div>
           <div className="mt-8 pt-8 border-t border-gray-700 text-center text-gray-400">
-            <p>&copy; 2025 Groovy December Festival. explore, enjoy and experience...</p>
+            <p className="mb-2">&copy; 2025 Groovy December Festival. explore, enjoy and experience...</p>
+            <p className="text-sm text-gray-500">Organized by <span className="text-green-400 font-semibold">Kenneth Handsome Lifestyle Ltd</span></p>
           </div>
         </div>
       </section>

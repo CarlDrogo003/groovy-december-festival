@@ -51,7 +51,56 @@ export function EventsClientPage() {
         .order('date', { ascending: true });
 
       if (error) throw error;
-      setEvents(data || []);
+      
+      // Define disabled events
+      const disabledEvents = [
+        // Automotive competitions
+        'drag-race-competition',
+        'groovy-go-karting-competition', 
+        'groovy-drift-wars-competition',
+        'auto-cross-competition',
+        'motorbike-600cc-competition',
+        'rally-cross-competition',
+        // Scrabble competition
+        'scrabble-competition',
+        // Camping experience 2
+        'camping-experience-2-kaspaland',
+        // Raffle draw
+        'raffle-draws'
+      ];
+      
+      // Manual image mapping for uploaded images
+      const eventsWithImages = (data || [])
+        .filter(event => !disabledEvents.includes(event.slug)) // Filter out disabled events
+        .map(event => {
+          const imageMap: { [key: string]: string } = {
+            'art-craft-village': '/events/art-craft-village.jpg',
+            'chess-competition': '/events/chess.jpg',
+            'culture-fest': '/events/culture-fest.jpg',
+            'ea-market-place': '/events/ea-market-place.jpg',
+            'eating-competition': '/events/eating-competition.jpg',
+            'hiking-competition': '/events/hiking.jpg',
+            'miss-groovy-december': '/events/miss-groovy-december.jpg',
+            'snooker-competition': '/events/snooker.jpg',
+            'suya-festival': '/events/suya-festival.jpg',
+            'traditional-boxing-competition': '/events/traditional-boxing.jpg',
+            'traditional-wrestling': '/events/traditional-wrestling.jpg'
+          };
+          
+          // Update Traditional category to States Events
+          // Also move traditional dance competition to States Events for now
+          const updatedCategory = event.category === 'Traditional' ? 'States Events' : 
+            (event.category === 'Cultural' && event.slug === 'traditional-dance-competition') ? 'States Events' : 
+            event.category;
+          
+          return {
+            ...event,
+            category: updatedCategory,
+            image_url: event.image_url || imageMap[event.slug] || null
+          };
+        });
+      
+      setEvents(eventsWithImages);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load events');
     } finally {
@@ -68,6 +117,9 @@ export function EventsClientPage() {
     { name: 'Entertainment', color: 'bg-purple-100 text-purple-800' },
     { name: 'Cultural', color: 'bg-pink-100 text-pink-800' },
     { name: 'Business', color: 'bg-indigo-100 text-indigo-800' },
+    { name: 'Sports', color: 'bg-red-100 text-red-800' },
+    { name: 'States Events', color: 'bg-emerald-100 text-emerald-800' },
+    { name: 'Special', color: 'bg-violet-100 text-violet-800' }
   ];
 
   const getCategoryColor = (category: string) => {
@@ -545,22 +597,16 @@ function EventCard({ event, onQuickView, getCategoryColor }: {
             </svg>
             {event.venue}
           </div>
-          {event.registration_fee && event.registration_fee > 0 && (
-            <div className="flex items-center text-sm text-gray-600">
-              <svg className="mr-2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-              </svg>
-              ₦{event.registration_fee.toLocaleString()}
-            </div>
-          )}
-          {event.registration_fee === 0 && (
-            <div className="flex items-center text-sm text-green-600">
-              <svg className="mr-2 h-4 w-4 text-green-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
-              Free Entry
-            </div>
-          )}
+          <div className="flex items-center text-sm text-gray-600">
+            <svg className="mr-2 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+            </svg>
+            {event.registration_fee && event.registration_fee > 0 ? (
+              <span>₦{event.registration_fee.toLocaleString()}</span>
+            ) : (
+              <span className="text-green-600 font-semibold">FREE</span>
+            )}
+          </div>
         </div>
 
         {/* Event Description */}
@@ -626,14 +672,16 @@ function CompactEventCard({ event, getCategoryColor }: {
               </svg>
               {event.venue}
             </div>
-            {event.registration_fee !== undefined && (
-              <div className="flex items-center">
-                <svg className="mr-1 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
-                </svg>
-                {event.registration_fee === 0 ? 'Free' : `₦${event.registration_fee.toLocaleString()}`}
-              </div>
-            )}
+            <div className="flex items-center">
+              <svg className="mr-1 h-4 w-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+              </svg>
+              {event.registration_fee && event.registration_fee > 0 ? (
+                `₦${event.registration_fee.toLocaleString()}`
+              ) : (
+                <span className="text-green-600 font-semibold">FREE</span>
+              )}
+            </div>
           </div>
           
           <p className="text-sm text-gray-600 line-clamp-2 mb-4">
@@ -783,7 +831,7 @@ function QuickViewModal({ event, onClose, getCategoryColor }: {
                   <div>
                     <p className="text-sm text-gray-500">Price</p>
                     <p className="font-semibold">
-                      {event.registration_fee === 0 ? 'Free Entry' : `₦${event.registration_fee.toLocaleString()}`}
+                      {event.registration_fee && event.registration_fee > 0 ? `₦${event.registration_fee.toLocaleString()}` : 'FREE'}
                     </p>
                   </div>
                 </div>

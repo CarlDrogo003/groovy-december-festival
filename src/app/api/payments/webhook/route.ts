@@ -3,66 +3,130 @@ import { supabaseAdmin } from '@/lib/supabaseAdminServer';
 import crypto from 'crypto';
 
 export async function POST(request: NextRequest) {
+  console.log('🔔 Paystack webhook received');
+  
   try {
-    const webhookData = await request.json();
+    // Get raw body for signature verification
+    const rawBody = await request.text();
+    const webhookData = JSON.parse(rawBody);
     const signature = request.headers.get('x-paystack-signature');
 
+    console.log('Webhook event type:', webhookData.event);
+    console.log('Webhook data reference:', webhookData.data?.reference);
+
     // Verify webhook signature for security
-    if (!verifyPaystackWebhook(webhookData, signature)) {
-      console.error('Invalid Paystack webhook signature');
+    if (!verifyPaystackWebhook(rawBody, signature)) {
+      console.error('❌ Invalid Paystack webhook signature');
+      console.log('Expected signature verification failed');
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
 
-    console.log('Paystack webhook received:', webhookData);
+    console.log('✅ Webhook signature verified');
 
     const { event, data } = webhookData;
 
     // Handle different webhook events
     switch (event) {
       case 'charge.success':
+        console.log('💰 Processing successful payment webhook');
         await handleSuccessfulPayment(data);
         break;
       
       case 'charge.failed':
+        console.log('❌ Processing failed payment webhook');
         await handleFailedPayment(data);
         break;
 
       case 'transfer.success':
+        console.log('💸 Processing successful transfer webhook');
         await handleSuccessfulTransfer(data);
         break;
 
       case 'transfer.failed':
+        console.log('❌ Processing failed transfer webhook');
         await handleFailedTransfer(data);
         break;
 
       default:
-        console.log('Unhandled Paystack webhook event:', event);
+        console.log('ℹ️ Unhandled Paystack webhook event:', event);
     }
 
-    return NextResponse.json({ status: 'success' });
+    // Always return 200 OK to acknowledge receipt
+    return NextResponse.json({ status: 'success', event, processed: true });
 
   } catch (error) {
-    console.error('Paystack webhook error:', error);
+    console.error('🚨 Paystack webhook processing error:', error);
+    
+    // Return 200 OK even on error to prevent retries for malformed requests
     return NextResponse.json(
-      { error: 'Webhook processing failed' },
-      { status: 500 }
+      { 
+        status: 'error', 
+        message: 'Webhook processing failed',
+        error: process.env.NODE_ENV === 'development' ? error : 'Internal error'
+      },
+      { status: 200 } // Return 200 to prevent Paystack retries for processing errors
     );
   }
 }
 
-function verifyPaystackWebhook(payload: any, signature: string | null): boolean {
+// Add GET method for webhook verification/testing
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const test = searchParams.get('test');
+
+  if (test === 'true') {
+    // Test webhook endpoint accessibility
+    return NextResponse.json({
+      status: 'Webhook endpoint is accessible',
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV,
+      configuration: {
+        has_secret_key: !!process.env.PAYSTACK_SECRET_KEY,
+        secret_key_type: process.env.PAYSTACK_SECRET_KEY ? 
+          (process.env.PAYSTACK_SECRET_KEY.startsWith('sk_test_') ? 'TEST' : 'LIVE') : 
+          'MISSING'
+      },
+      webhook_info: {
+        supported_events: [
+          'charge.success',
+          'charge.failed',
+          'transfer.success',
+          'transfer.failed'
+        ],
+        signature_verification: 'HMAC SHA512',
+        required_headers: ['x-paystack-signature']
+      }
+    });
+  }
+
+  return NextResponse.json(
+    { message: 'Paystack webhook endpoint - POST only' },
+    { status: 405 }
+  );
+}
+
+function verifyPaystackWebhook(rawBody: string, signature: string | null): boolean {
   if (!signature || !process.env.PAYSTACK_SECRET_KEY) {
+    console.log('Missing signature or secret key for webhook verification');
     return false;
   }
 
   try {
-    const payloadString = JSON.stringify(payload);
     const hash = crypto
       .createHmac('sha512', process.env.PAYSTACK_SECRET_KEY)
-      .update(payloadString)
+      .update(rawBody, 'utf8')
       .digest('hex');
 
-    return hash === signature;
+    const isValid = hash === signature;
+    
+    if (!isValid) {
+      console.log('Webhook signature mismatch:', {
+        expected: signature,
+        calculated: hash
+      });
+    }
+
+    return isValid;
   } catch (error) {
     console.error('Paystack signature verification error:', error);
     return false;

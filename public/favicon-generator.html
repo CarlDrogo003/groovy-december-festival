@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Groovy December Favicon Generator</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            background: #f0f0f0;
+        }
+        
+        .favicon-container {
+            display: inline-block;
+            margin: 10px;
+            text-align: center;
+        }
+        
+        .favicon {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #00b894 0%, #e17055 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            margin: 0 auto 10px auto;
+        }
+        
+        .favicon::before {
+            content: '🎵';
+            font-size: 32px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+        }
+        
+        .favicon-alt {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        
+        .favicon-alt::before {
+            content: '🎉';
+        }
+        
+        .favicon-simple {
+            background: linear-gradient(135deg, #00b894 0%, #e17055 100%);
+        }
+        
+        .favicon-simple::before {
+            content: 'GD';
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+        
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        
+        .instructions {
+            max-width: 600px;
+            margin: 30px auto;
+            padding: 20px;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        code {
+            background: #f5f5f5;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <h1>Groovy December Favicon Options</h1>
+    
+    <div style="text-align: center;">
+        <div class="favicon-container">
+            <div class="favicon"></div>
+            <p>Music Note Version</p>
+        </div>
+        
+        <div class="favicon-container">
+            <div class="favicon favicon-alt"></div>
+            <p>Party Version</p>
+        </div>
+        
+        <div class="favicon-container">
+            <div class="favicon favicon-simple"></div>
+            <p>Text Version (GD)</p>
+        </div>
+    </div>
+    
+    <div class="instructions">
+        <h3>How to Create Favicon:</h3>
+        <ol>
+            <li>Right-click on your preferred favicon above</li>
+            <li>Select "Inspect Element" to capture the rendered icon</li>
+            <li>Use browser dev tools to take a screenshot of just the favicon</li>
+            <li>Or use an online favicon generator like <code>favicon.io</code> with these designs</li>
+            <li>Save as <code>favicon.ico</code> in multiple sizes (16x16, 32x32, 48x48)</li>
+            <li>Replace the current favicon in your app folder</li>
+        </ol>
+        
+        <h3>Alternative Method:</h3>
+        <p>Visit <strong>favicon.io</strong> and use:</p>
+        <ul>
+            <li><strong>Text:</strong> "GD" </li>
+            <li><strong>Background:</strong> Linear gradient from #00b894 to #e17055</li>
+            <li><strong>Font:</strong> Bold, white color</li>
+            <li><strong>Shape:</strong> Circle</li>
+        </ul>
+    </div>
+</body>
+</html>
