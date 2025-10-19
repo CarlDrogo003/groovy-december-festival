@@ -185,10 +185,20 @@ export function EventsClientPage() {
       });
     }
 
-    // Sort: Featured first, then by date
+    // Sort: Paid events first, then featured, then by date
     return filtered.sort((a, b) => {
+      const aHasFee = (a.registration_fee || 0) > 0;
+      const bHasFee = (b.registration_fee || 0) > 0;
+      
+      // Paid events come first
+      if (aHasFee && !bHasFee) return -1;
+      if (!aHasFee && bHasFee) return 1;
+      
+      // Within same payment tier, featured comes first
       if (a.featured && !b.featured) return -1;
       if (!a.featured && b.featured) return 1;
+      
+      // Finally sort by date
       return new Date(a.date).getTime() - new Date(b.date).getTime();
     });
   }, [events, searchQuery, selectedCategory, dateFilter, priceFilter]);
@@ -620,7 +630,7 @@ function EventCard({ event, onQuickView, getCategoryColor }: {
             href={`/events/${event.slug}`}
             className="flex-1 bg-gradient-to-r from-green-600 to-red-600 text-white text-center px-4 py-2 rounded-lg text-sm font-semibold hover:from-green-700 hover:to-red-700 transition-all duration-300 transform hover:scale-105"
           >
-            Get Tickets
+            Register to Participate
           </Link>
           <button
             onClick={() => onQuickView(event)}
@@ -852,7 +862,7 @@ function QuickViewModal({ event, onClose, getCategoryColor }: {
                 href={`/events/${event.slug}`}
                 className="flex-1 bg-gradient-to-r from-green-600 to-red-600 text-white text-center px-6 py-3 rounded-lg font-semibold hover:from-green-700 hover:to-red-700 transition-all duration-300 transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
               >
-                Get Tickets
+                Register to Participate
               </Link>
               <button
                 onClick={onClose}

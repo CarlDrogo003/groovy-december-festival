@@ -9,7 +9,7 @@ export default async function EventDetails({ params }: { params: Promise<{ slug:
   // Fetch event by slug
   const { data: event, error } = await supabase
     .from("events")
-    .select("id, title, date, venue, description")
+    .select("id, title, date, venue, description, registration_fee")
     .eq("slug", slug)
     .single();
 
@@ -26,7 +26,12 @@ export default async function EventDetails({ params }: { params: Promise<{ slug:
       <p className="text-lg text-gray-800">{event.description}</p>
 
       {/* Registration Form */}
-      <RegisterForm eventId={event.id} eventName={event.title} />
+      <RegisterForm 
+        eventId={event.id} 
+        eventName={event.title} 
+        event={event}
+        eventFee={event.registration_fee || 0}
+      />
     </section>
   );
 }

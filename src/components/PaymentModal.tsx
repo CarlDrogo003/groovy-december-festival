@@ -78,6 +78,13 @@ export function PaymentModal({
     setLoading(true);
 
     try {
+      console.log('🔄 PaymentModal: Starting payment...', {
+        amount: safeAmount,
+        customerEmail,
+        customerName,
+        paymentType
+      });
+
       // Track payment initiation
       trackEventPaymentStart(paymentType || 'unknown', safeAmount);
 
@@ -95,9 +102,14 @@ export function PaymentModal({
         description: description || 'Festival payment'
       });
       
+      console.log('✅ PaymentModal: Payment initialization completed');
+      
     } catch (error) {
-      console.error('Payment failed:', error);
+      console.error('💥 PaymentModal: Payment failed:', error);
       const errorMessage = error instanceof Error ? error.message : String(error);
+      
+      // Show user-friendly error message
+      alert(`Payment failed: ${errorMessage}\n\nPlease try again or contact support if the issue persists.`);
       
       // Track payment failure
       trackEventPaymentFailed(paymentType || 'unknown', safeAmount, errorMessage);

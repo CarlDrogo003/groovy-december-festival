@@ -20,7 +20,7 @@ export async function verifyAdminToken(token: string | null) {
   // check admins table for user_id or email
   const { data: adminRow, error: qErr } = await supabaseAdmin
     .from("admins")
-    .select("id, role")
+    .select("id, role, email, user_id")
     .or(`user_id.eq.${user.id},email.eq.${user.email}`)
     .limit(1)
     .maybeSingle();

@@ -108,33 +108,43 @@ export default function RegistrationForm() {
     try {
       setLoading(true);
 
-      // Upload files
+      // Upload files first
       const headshotUrl = await uploadFile(uploadedFiles.headshot || null, "headshot", contestantData.email || "");
       const fullBodyUrl = await uploadFile(uploadedFiles.fullBody || null, "fullbody", contestantData.email || "");
 
-      // Insert contestant into DB
-      const { data, error } = await supabase.from("pageant_contestants").insert([
-        {
-          ...contestantData,
-          headshot_url: headshotUrl,
-          full_body_url: fullBodyUrl,
-        },
-      ]).select().single();
+      // Prepare data for API
+      const registrationData = {
+        ...contestantData,
+        headshot_url: headshotUrl,
+        full_body_url: fullBodyUrl,
+      };
 
-      if (error) {
-        setMessage("❌ Error saving contestant: " + error.message);
-      } else {
-        // Track successful application submission
-        trackPageantApplicationSubmit(contestantData.age || 0);
-        setMessage("✅ Registration submitted successfully! Welcome to Miss Groovy December 2024!");
-        
-        // Reset form
-        setFormData({});
-        setUploadedFiles({});
-        (document.getElementById('pageant-form') as HTMLFormElement)?.reset();
+      // Use API route instead of direct Supabase call
+      const response = await fetch('/api/pageant/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(registrationData),
+      });
+
+      const result = await response.json();
+
+      if (!response.ok) {
+        throw new Error(result.error || 'Registration failed');
       }
+
+      // Track successful application submission
+      trackPageantApplicationSubmit(contestantData.age || 0);
+      setMessage("✅ Registration submitted successfully! Welcome to Miss Groovy December 2024!");
+      
+      // Reset form
+      setFormData({});
+      setUploadedFiles({});
+      (document.getElementById('pageant-form') as HTMLFormElement)?.reset();
+
     } catch (err: any) {
-      setMessage("❌ Unexpected error: " + (err?.message ?? String(err)));
+      setMessage("❌ Registration failed: " + (err?.message ?? String(err)));
     } finally {
       setLoading(false);
     }

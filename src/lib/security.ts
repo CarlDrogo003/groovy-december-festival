@@ -12,6 +12,7 @@ export const securityConfig = {
       'https://www.google-analytics.com',
       'https://analytics.google.com',
       'https://tagmanager.google.com',
+      'https://js.paystack.co', // Paystack SDK
     ],
     'style-src': ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
     'img-src': [
@@ -28,8 +29,11 @@ export const securityConfig = {
       'https://analytics.google.com',
       'https://stats.g.doubleclick.net',
       'https://region1.google-analytics.com',
+      'https://api.paystack.co', // Paystack API
+      'https://checkout.paystack.com', // Paystack checkout
     ].filter(Boolean),
     'font-src': ["'self'", 'https://fonts.gstatic.com'],
+    'frame-src': ["'self'", 'https://js.paystack.co', 'https://checkout.paystack.com'], // Paystack iframes
     'object-src': ["'none'"],
     'base-uri': ["'self'"],
     'form-action': ["'self'"],

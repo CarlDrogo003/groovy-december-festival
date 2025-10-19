@@ -39,6 +39,7 @@ export function PaymentButton({
 }: PaymentButtonProps) {
   const [loading, setLoading] = useState(false);
   const [sdkReady, setSdkReady] = useState(false);
+  const [sdkError, setSdkError] = useState(false);
   const { trackEventPaymentStart, trackEventPaymentFailed } = useEventTracking();
 
   useEffect(() => {
@@ -47,8 +48,12 @@ export function PaymentButton({
       try {
         await paystackService.loadSDK();
         setSdkReady(true);
+        setSdkError(false);
       } catch (error) {
         console.error('Failed to load Paystack SDK:', error);
+        setSdkError(true);
+        // Still set sdkReady to true to allow fallback payment flow
+        setSdkReady(true);
       }
     };
 
@@ -61,10 +66,22 @@ export function PaymentButton({
       return;
     }
 
+    if (sdkError) {
+      alert('Payment system unavailable. Please try refreshing the page or contact support.');
+      return;
+    }
+
     setLoading(true);
     onPaymentStart?.();
 
     try {
+      console.log('🔄 PaymentButton: Starting payment...', {
+        amount,
+        customerEmail,
+        customerName,
+        paymentType
+      });
+
       // Track payment button click
       trackEventPaymentStart(paymentType, amount);
 
@@ -81,9 +98,15 @@ export function PaymentButton({
         description,
       });
       
+      console.log('✅ PaymentButton: Payment initialization completed');
+      
     } catch (error) {
-      console.error('Payment error:', error);
+      console.error('💥 PaymentButton: Payment error:', error);
       const errorMessage = error instanceof Error ? error.message : String(error);
+      
+      // Show user-friendly error message
+      alert(`Payment failed: ${errorMessage}\n\nPlease try again or contact support if the issue persists.`);
+      
       trackEventPaymentFailed(paymentType, amount, errorMessage);
       onPaymentError?.(errorMessage);
     } finally {
@@ -150,6 +173,10 @@ export function PaymentButton({
           <div className="flex items-center justify-center gap-2">
             <div className="animate-pulse rounded-full h-4 w-4 bg-white/50"></div>
             <span>Loading Payment...</span>
+          </div>
+        ) : sdkError ? (
+          <div className="flex items-center justify-center gap-2">
+            <span>⚠️ Payment Unavailable</span>
           </div>
         ) : (
           <>

@@ -3,9 +3,8 @@
 import { useState, useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useEventTracking } from "@/hooks/useAnalytics";
-import PaymentButton from "@/components/PaymentButton";
 import PaymentModal from "@/components/PaymentModal";
-import { paystackService, FestivalPaymentConfig } from "@/lib/paystack";
+import { FestivalPaymentConfig } from "@/lib/paystack";
 import { useAuth } from "@/contexts/AuthContext";
 
 interface Event {
@@ -38,8 +37,8 @@ export default function RegisterForm({
   const { trackEventRegistrationStart, trackEventRegistration, trackEventRegistrationComplete } = useEventTracking();
 
   // Determine if this is a paid event
-  const isPaidEvent = eventFee > 0;
   const actualEventFee = event?.registration_fee || eventFee;
+  const isPaidEvent = actualEventFee > 0;
 
   useEffect(() => {
     // Pre-fill user data if authenticated
@@ -53,18 +52,28 @@ export default function RegisterForm({
     try {
       setIsSubmitting(true);
 
-      // Insert registration into Supabase for free events
-      const { error } = await supabase.from("event_registrations").insert([{
-        event_id: eventId,
-        user_id: user?.id,
-        full_name: formData.fullName,
-        email: formData.email,
-        phone: formData.phone,
-        payment_status: 'paid', // Free events are considered "paid"
-        payment_reference: `FREE_${Date.now()}`
-      }]);
+      // Register via API route (handles RLS properly)
+      const response = await fetch('/api/events/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          event_id: eventId,
+          user_id: user?.id,
+          full_name: formData.fullName,
+          email: formData.email,
+          phone: formData.phone,
+          payment_status: 'paid', // Free events are considered "paid"
+          payment_reference: `FREE_${Date.now()}`
+        }),
+      });
 
-      if (error) throw error;
+      const result = await response.json();
+
+      if (!response.ok || !result.success) {
+        throw new Error(result.error || 'Registration failed');
+      }
 
       // Track successful free registration
       trackEventRegistration(eventName, eventId, 0);
@@ -330,7 +339,13 @@ export default function RegisterForm({
         <PaymentModal
           isOpen={showPaymentModal}
           onClose={() => setShowPaymentModal(false)}
-          paymentConfig={paymentConfig}
+          amount={paymentConfig.amount}
+          description={paymentConfig.description}
+          customerEmail={paymentConfig.customerDetails.email}
+          customerName={paymentConfig.customerDetails.fullName}
+          paymentType={paymentConfig.type}
+          itemId={paymentConfig.itemId}
+          itemName={paymentConfig.itemName}
           onPaymentSuccess={handlePaymentSuccess}
           onPaymentError={handlePaymentError}
         />

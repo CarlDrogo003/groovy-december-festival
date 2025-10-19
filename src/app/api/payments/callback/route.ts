@@ -65,23 +65,37 @@ export async function GET(request: NextRequest) {
     reference: paymentData.reference,
     amount: paymentData.amount,
     status: paymentData.status,
-    customer: paymentData.customer.email
-  });
-
-  // Prepare success redirect with payment details
-  const successParams = new URLSearchParams({
-    status: 'success',
-    reference: paymentData.reference,
-    amount: (paymentData.amount / 100).toString(), // Convert from kobo to naira
-    currency: paymentData.currency,
-    channel: paymentData.channel,
     customer: paymentData.customer.email,
-    transaction_id: paymentData.id.toString(),
-    paid_at: paymentData.paid_at || new Date().toISOString()
+    metadata: paymentData.metadata
   });
 
-  // Redirect to success page with payment details
-  redirect(`/payment/result?${successParams.toString()}`);
+  // Check payment type from metadata to determine redirect
+  const paymentType = paymentData.metadata?.payment_type;
+  
+  if (paymentType === 'vendor_booth') {
+    // Redirect to vendor success page
+    const vendorSuccessParams = new URLSearchParams({
+      reference: paymentData.reference,
+      trxref: paymentData.reference, // Include both for compatibility
+      status: 'success'
+    });
+    redirect(`/vendors/payment-success?${vendorSuccessParams.toString()}`);
+  } else {
+    // Prepare success redirect with payment details for other payment types
+    const successParams = new URLSearchParams({
+      status: 'success',
+      reference: paymentData.reference,
+      amount: (paymentData.amount / 100).toString(), // Convert from kobo to naira
+      currency: paymentData.currency,
+      channel: paymentData.channel,
+      customer: paymentData.customer.email,
+      transaction_id: paymentData.id.toString(),
+      paid_at: paymentData.paid_at || new Date().toISOString()
+    });
+
+    // Redirect to general success page with payment details
+    redirect(`/payment/result?${successParams.toString()}`);
+  }
 }
 
 // Handle POST requests as well (some payment gateways send POST callbacks)

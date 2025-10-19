@@ -67,8 +67,14 @@ export class PaystackPaymentService {
     this.publicKey = process.env.NEXT_PUBLIC_PAYSTACK_PUBLIC_KEY || '';
     this.secretKey = process.env.PAYSTACK_SECRET_KEY || '';
     this.baseUrl = 'https://api.paystack.co';
-    // More robust environment detection
-    this.isProduction = process.env.NODE_ENV === 'production' || process.env.VERCEL_ENV === 'production';
+    
+    // Force development mode if using test keys
+    const hasTestKey = this.publicKey.startsWith('pk_test_');
+    const nodeEnv = process.env.NODE_ENV || process.env.NEXT_PUBLIC_NODE_ENV || 'development';
+    const forceTestMode = process.env.NEXT_PUBLIC_FORCE_TEST_MODE === 'true';
+    
+    // Override production detection if using test keys or force test mode
+    this.isProduction = (nodeEnv === 'production' || process.env.VERCEL_ENV === 'production') && !hasTestKey && !forceTestMode;
     
     // Enhanced configuration check with detailed logging
     if (!this.publicKey) {
@@ -135,16 +141,32 @@ export class PaystackPaymentService {
         return;
       }
 
+      // Check if script is already being loaded
+      const existingScript = document.querySelector('script[src="https://js.paystack.co/v1/inline.js"]');
+      if (existingScript) {
+        existingScript.addEventListener('load', () => resolve(true));
+        existingScript.addEventListener('error', () => reject(new Error('Failed to load Paystack SDK')));
+        return;
+      }
+
       const script = document.createElement('script');
       script.src = 'https://js.paystack.co/v1/inline.js';
       script.async = true;
       
+      // Add timeout for loading
+      const timeout = setTimeout(() => {
+        console.error('Paystack SDK loading timeout');
+        reject(new Error('Failed to load Paystack SDK - timeout'));
+      }, 10000); // 10 second timeout
+      
       script.onload = () => {
+        clearTimeout(timeout);
         console.log('Paystack SDK loaded successfully');
         resolve(true);
       };
       
       script.onerror = () => {
+        clearTimeout(timeout);
         console.error('Failed to load Paystack SDK');
         reject(new Error('Failed to load Paystack SDK'));
       };
@@ -195,6 +217,12 @@ export class PaystackPaymentService {
         return;
       }
 
+      console.log('🔄 Starting payment initialization...', {
+        type: config.type,
+        amount: config.amount,
+        customer: config.customerDetails.email
+      });
+
       // Generate unique payment reference
       const paymentReference = this.generatePaymentReference(config.type, config.itemId);
 
@@ -220,17 +248,19 @@ export class PaystackPaymentService {
         lastname,
         phone: config.customerDetails.phone,
         channels,
+        callback_url: `${window.location.origin}/api/payments/callback`,
         metadata: {
           festival_event: 'Groovy December 2025',
           payment_type: config.type,
           item_id: config.itemId,
           item_name: config.itemName,
           description: config.description,
+          customer_name: config.customerDetails.fullName,
           ...config.metadata,
         },
       };
 
-      console.log('Initializing payment via server...', {
+      console.log('📡 Sending payment request to server...', {
         reference: paymentReference,
         amount: config.amount,
         email: config.customerDetails.email
@@ -249,18 +279,21 @@ export class PaystackPaymentService {
       });
 
       const result = await response.json();
+      console.log('📦 Server response:', result);
 
       if (!response.ok || !result.success) {
+        console.error('❌ Payment initialization failed:', result);
         throw new Error(result.error || 'Payment initialization failed');
       }
 
-      console.log('Payment initialized successfully:', result.data);
+      console.log('✅ Payment initialized successfully:', result.data);
 
       // Redirect to Paystack checkout page
       if (result.data.authorization_url) {
         // Store payment details for later verification
         this.storePaymentDetails(config, result.data);
         
+        console.log('🔗 Redirecting to Paystack checkout...');
         // Redirect to Paystack checkout
         window.location.href = result.data.authorization_url;
       } else {
@@ -268,7 +301,7 @@ export class PaystackPaymentService {
       }
 
     } catch (error) {
-      console.error('Payment initialization error:', error);
+      console.error('💥 Payment initialization error:', error);
       this.handlePaymentError(error as Error, config);
       throw error;
     }
