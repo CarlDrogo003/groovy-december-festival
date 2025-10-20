@@ -185,6 +185,27 @@ async function handleSuccessfulPayment(eventData: any) {
         paymentReference
       );
 
+      // If this is a diaspora booking, update coordinator earnings
+      if (payment.payment_type === 'diaspora_booking') {
+        // Get the booking to find referral_code and final_amount
+        const { data: booking, error: bookingError } = await supabaseAdmin
+          .from('diaspora_bookings')
+          .select('referral_code, final_amount')
+          .eq('id', payment.item_id)
+          .single();
+        if (!bookingError && booking && booking.referral_code && booking.final_amount) {
+          // Call the API route to update coordinator earnings
+          await fetch(`${process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:3000'}/api/admin/diaspora/update-coordinator-earnings`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              referral_code: booking.referral_code,
+              final_amount: booking.final_amount
+            })
+          });
+        }
+      }
+
       // Send confirmation email (implement email service)
       await sendPaymentConfirmationEmail(payment.customer_email, {
         transactionReference: paymentReference,

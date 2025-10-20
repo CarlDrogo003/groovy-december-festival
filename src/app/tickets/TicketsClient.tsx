@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { PaystackPaymentService, FestivalPaymentConfig } from '@/lib/paystack';
 import Link from 'next/link';
+import ContactEventFooter from '@/components/ContactEventFooter';
 
 interface TicketType {
   id: string;
@@ -41,7 +42,7 @@ const ticketTypes: TicketType[] = [
   {
     id: 'regular',
     name: 'Regular Pass',
-    price: 35000,
+  price: 2000,
     features: [
       'Access to all public events',
       'Priority seating at concerts',
@@ -626,6 +627,7 @@ export default function TicketsClient() {
           </div>
         </div>
       </section>
+      <ContactEventFooter />
     </div>
   );
 }

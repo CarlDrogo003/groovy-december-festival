@@ -1,8 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+// For live exchange rate (Frankfurter API, free)
+const EXCHANGE_API_URL = "https://api.frankfurter.app/latest?from=USD&to=NGN";
+import PaymentModal from "@/components/PaymentModal";
 import { supabase } from "@/lib/supabaseClient";
 import Link from "next/link";
+import ContactEventFooter from '@/components/ContactEventFooter';
 
 interface DiasporaPackage {
   id: string;
@@ -34,123 +38,118 @@ export default function DiasporaPage() {
   const [referralData, setReferralData] = useState<ReferralData | null>(null);
   const [discount, setDiscount] = useState(0);
   const [message, setMessage] = useState("");
+  const [pendingBooking, setPendingBooking] = useState<any>(null);
+  const [showPaymentModal, setShowPaymentModal] = useState(false);
+  const [ngnAmount, setNgnAmount] = useState<number | null>(null);
+  const [loadingRate, setLoadingRate] = useState(false);
 
   // Sample diaspora packages data
   const diasporaPackages: DiasporaPackage[] = [
     {
-      id: "homecoming-premium",
-      name: "Homecoming Premium",
-      price_usd: 2500,
-      duration: "7 Days",
-      description: "The ultimate diaspora experience with VIP access, luxury accommodations, and exclusive cultural immersion.",
+      id: "platinum",
+      name: "Platinum",
+      price_usd: 5000,
+      duration: "1 Week",
+      description: "5-Star Accommodation & Breakfast + Dinner, Chauffeur Driven Vehicle + Security, Access to all events, 5 Groovy December Merchandise, Access to VIP Lounge, Selfie with Ex Football Internationals, Local Airline Return Ticket, Accident Insurance, Access to knock & Eat.",
       benefits: [
-        "Luxury hotel accommodation (5 nights)",
-        "VIP festival access & seating",
-        "Private cultural tours",
-        "Meet & greet with local celebrities",
-        "Traditional ceremony participation",
-        "Networking dinner with diaspora community",
-        "Professional photography session",
-        "Souvenir package",
-        "Airport transfers",
-        "24/7 concierge service"
+        "5-Star Accommodation & Breakfast + Dinner",
+        "Chauffeur Driven Vehicle + Security",
+        "Access to all events",
+        "5 Groovy December Merchandise",
+        "Access to VIP Lounge",
+        "Selfie with Ex Football Internationals",
+        "Local Airline Return Ticket",
+        "Accident Insurance",
+        "Access to knock & Eat"
       ],
       popular: true,
       discount_eligible: true
     },
     {
-      id: "cultural-explorer",
-      name: "Cultural Explorer",
-      price_usd: 1800,
-      duration: "5 Days", 
-      description: "Perfect blend of festival fun and cultural discovery for diasporans wanting authentic African experiences.",
+      id: "gold",
+      name: "Gold",
+      price_usd: 2000,
+      duration: "1 Week",
+      description: "3-4 Star Accommodation + Breakfast & Dinner, 3 Groovy December Merchandise, Access to all events, VIP Lounge, Selfie with Ex Football Internationals, Accident Insurance, Local Airline Return Ticket, Access to knock & Eat, Chauffeur Driven Car.",
       benefits: [
-        "Boutique hotel accommodation (4 nights)",
-        "Festival general admission",
-        "Guided cultural site visits",
-        "Traditional cooking class",
-        "Local artisan workshops",
-        "Community engagement activities",
-        "Welcome & farewell dinners",
-        "Festival merchandise",
-        "Airport transfers"
+        "3-4 Star Accommodation + Breakfast & Dinner",
+        "3 Groovy December Merchandise",
+        "Access to all events",
+        "VIP Lounge",
+        "Selfie with Ex Football Internationals",
+        "Accident Insurance",
+        "Local Airline Return Ticket",
+        "Access to knock & Eat",
+        "Chauffeur Driven Car"
       ],
       discount_eligible: true
     },
     {
-      id: "festival-focus",
-      name: "Festival Focus",
-      price_usd: 1200,
+      id: "silver",
+      name: "Silver",
+      price_usd: 1000,
+      duration: "1 Week",
+      description: "2-3 Star Accommodation + Breakfast & Dinner, Access to all events, Selfie with Ex Football Internationals, 2 Groovy December Merchandise, Access to knock & Eat, Local Airline Return Ticket, Accident Insurance.",
+      benefits: [
+        "2-3 Star Accommodation + Breakfast & Dinner",
+        "Access to all events",
+        "Selfie with Ex Football Internationals",
+        "2 Groovy December Merchandise",
+        "Access to knock & Eat",
+        "Local Airline Return Ticket",
+        "Accident Insurance"
+      ],
+      discount_eligible: true
+    },
+    {
+      id: "bronze",
+      name: "Bronze",
+      price_usd: 500,
       duration: "3 Days",
-      description: "Concentrated festival experience perfect for diasporans with limited time but maximum excitement.",
+      description: "Access to all events, Selfie with Ex Football Internationals, Access to knock & Eat, 2 Groovy December Merchandise.",
       benefits: [
-        "Quality hotel accommodation (2 nights)",
-        "3-day festival pass",
-        "Welcome reception",
-        "Festival food vouchers",
-        "Diaspora meetup events",
-        "Cultural showcase participation",
-        "Airport transfers",
-        "Festival souvenir"
+        "Access to all events",
+        "Selfie with Ex Football Internationals",
+        "Access to knock & Eat",
+        "2 Groovy December Merchandise"
       ],
       discount_eligible: true
     },
     {
-      id: "family-reunion",
-      name: "Family Reunion Package",
-      price_usd: 3200,
-      duration: "10 Days",
-      description: "Extended stay package designed for families reconnecting with their roots and extended family.",
+      id: "family-five",
+      name: "Family Package (Five)",
+      price_usd: 5000,
+      duration: "1 Week",
+      description: "Family of Five: 3-bedroom Apartment, Access to all events, Chauffeur Driven Vehicle + Security, 10 Groovy December Merchandise, Accident Insurance, Selfie with Ex Football Internationals, Access to VIP Lounge, Access to knock & Eat. Optional: Pay extra $2000 to enjoy breakfast & dinner.",
       benefits: [
-        "Family suite accommodation (9 nights)",
-        "Festival family passes",
-        "Extended family meetup coordination",
-        "Genealogy research assistance",
-        "Family photo documentation",
-        "Traditional naming ceremony",
-        "Community integration activities",
-        "Local school visits",
-        "Extended cultural tours",
-        "Family feast organization"
+        "3-bedroom Apartment",
+        "Access to all events",
+        "Chauffeur Driven Vehicle + Security",
+        "10 Groovy December Merchandise",
+        "Accident Insurance",
+        "Selfie with Ex Football Internationals",
+        "Access to VIP Lounge",
+        "Access to knock & Eat",
+        "Optional: Pay extra $2000 for breakfast & dinner"
       ],
       discount_eligible: true
     },
     {
-      id: "business-networking",
-      name: "Business & Investment",
-      price_usd: 2800,
-      duration: "6 Days",
-      description: "For diaspora entrepreneurs and investors looking to explore business opportunities while enjoying the festival.",
+      id: "family-three",
+      name: "Family Package (Three)",
+      price_usd: 4000,
+      duration: "1 Week",
+      description: "Family of Three: 2-bedroom Apartment, Access to all events, Chauffeur Driven Vehicle + Security, 7 Groovy December Merchandise, Accident Insurance, Selfie with Ex Football Internationals, Access to VIP Lounge, Access to knock & Eat. Optional: Pay extra $1500 to enjoy breakfast & dinner.",
       benefits: [
-        "Business hotel accommodation (5 nights)",
-        "VIP festival networking access",
-        "Business forum participation",
-        "Investment opportunity presentations",
-        "Local business leader meetings",
-        "Market research assistance",
-        "Legal consultation session",
-        "Government liaison meetings",
-        "Business dinner events",
-        "Investment guide package"
-      ],
-      discount_eligible: true
-    },
-    {
-      id: "youth-discovery",
-      name: "Youth Discovery",
-      price_usd: 950,
-      duration: "4 Days",
-      description: "Special package for young diasporans (18-30) discovering their heritage with peers.",
-      benefits: [
-        "Youth hostel accommodation (3 nights)",
-        "Festival youth passes",
-        "Peer group cultural activities",
-        "Youth leadership forum",
-        "Traditional music & dance lessons",
-        "Social impact project participation",
-        "Youth networking events",
-        "Career mentorship sessions",
-        "Festival volunteer opportunities"
+        "2-bedroom Apartment",
+        "Access to all events",
+        "Chauffeur Driven Vehicle + Security",
+        "7 Groovy December Merchandise",
+        "Accident Insurance",
+        "Selfie with Ex Football Internationals",
+        "Access to VIP Lounge",
+        "Access to knock & Eat",
+        "Optional: Pay extra $1500 for breakfast & dinner"
       ],
       discount_eligible: true
     }
@@ -193,9 +192,10 @@ export default function DiasporaPage() {
 
   const handleBooking = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setLoadingRate(true);
     const form = e.currentTarget;
     const formData = new FormData(form);
-    
+    const referral_code = String(formData.get("referral_code") || "").trim() || null;
     const booking = {
       package_id: selectedPackage?.id,
       package_name: selectedPackage?.name,
@@ -203,31 +203,80 @@ export default function DiasporaPage() {
       email: String(formData.get("email") || "").trim(),
       phone: String(formData.get("phone") || "").trim(),
       travelers: Number(formData.get("travelers") || 1),
-      referral_code: referralCode || null,
+      referral_code,
       original_price: selectedPackage?.price_usd || 0,
       discounted_price: discount > 0 ? (selectedPackage?.price_usd || 0) * (1 - discount/100) : selectedPackage?.price_usd || 0,
       special_requests: String(formData.get("special_requests") || "").trim(),
     };
-
+    setPendingBooking(booking);
+    // Fetch live USD/NGN rate with timeout and fallback
+    const FIXED_RATE = 1500; // fallback rate
+    let didTimeout = false;
     try {
-      const { error } = await supabase.from("diaspora_bookings").insert([booking]);
+      const fetchWithTimeout = (url: string, ms: number) => {
+        return new Promise((resolve, reject) => {
+          const timer = setTimeout(() => {
+            didTimeout = true;
+            reject(new Error('timeout'));
+          }, ms);
+          fetch(url)
+            .then(response => response.json())
+            .then(data => {
+              clearTimeout(timer);
+              resolve(data);
+            })
+            .catch(err => {
+              clearTimeout(timer);
+              reject(err);
+            });
+        });
+      };
+      const data: any = await fetchWithTimeout(EXCHANGE_API_URL, 5000);
+      // Frankfurter API: { rates: { NGN: <rate> }, ... }
+      const rate = data?.rates?.NGN || null;
+      if (rate) {
+        const ngn = Math.round(booking.discounted_price * rate);
+        setNgnAmount(ngn);
+        setShowPaymentModal(true);
+      } else {
+        setMessage("❌ Could not fetch exchange rate. Using fallback rate.");
+        const ngn = Math.round(booking.discounted_price * FIXED_RATE);
+        setNgnAmount(ngn);
+        setShowPaymentModal(true);
+      }
+    } catch (err) {
+      setMessage(didTimeout ? "❌ Exchange rate fetch timed out. Using fallback rate." : "❌ Error fetching exchange rate. Using fallback rate.");
+      const ngn = Math.round(booking.discounted_price * FIXED_RATE);
+      setNgnAmount(ngn);
+      setShowPaymentModal(true);
+    } finally {
+      setLoadingRate(false);
+    }
+  };
+
+  // After successful payment, save booking
+  const handlePaymentSuccess = async () => {
+    if (!pendingBooking) return;
+    try {
+      const { error } = await supabase.from("diaspora_bookings").insert([pendingBooking]);
       if (error) {
         setMessage("❌ Error: " + error.message);
       } else {
         // Update referral count if referral was used
-        if (referralCode) {
+        if (pendingBooking.referral_code) {
           await supabase.rpc('increment_referral_count', { 
-            ref_code: referralCode,
-            booking_amount: booking.discounted_price 
+            ref_code: pendingBooking.referral_code,
+            booking_amount: pendingBooking.discounted_price 
           });
         }
-        
-        setMessage("✅ Booking successful! We'll contact you with payment details.");
-        form.reset();
+        setMessage("✅ Booking successful! Payment received. We'll contact you with details.");
         setSelectedPackage(null);
       }
     } catch (err: any) {
       setMessage("❌ Unexpected error: " + (err?.message ?? String(err)));
+    } finally {
+      setPendingBooking(null);
+      setShowPaymentModal(false);
     }
   };
 
@@ -302,16 +351,27 @@ export default function DiasporaPage() {
               >
                 Explore Packages
               </a>
-              <button
-                onClick={() => setShowReferralModal(true)}
-                className="text-sm font-semibold leading-6 text-white hover:text-gray-300"
-              >
-                Get Referral Code <span aria-hidden="true">→</span>
-              </button>
             </div>
           </div>
         </div>
       </div>
+
+      {/* Club Tour Headline Event Section */}
+      <section className="bg-gradient-to-r from-purple-900 via-pink-900 to-red-900 py-16 px-4 sm:px-8">
+        <div className="max-w-4xl mx-auto text-center">
+          <h2 className="text-3xl sm:text-4xl font-extrabold text-white mb-6 tracking-tight drop-shadow-lg">
+            THE ADRENALINE PUMPING “CLUB TOUR” YOU DON’T WANNA MISS!
+          </h2>
+          <div className="bg-white/10 rounded-xl shadow-lg p-6 sm:p-10 mb-4">
+            <p className="text-lg sm:text-xl text-white font-medium mb-4">
+              This December, Abuja explodes with the <span className="font-bold text-yellow-300">48 Hours Club Tour – Groovy December 2025</span>: the city’s wildest, most exclusive nightlife marathon ever. Six elite clubs. Forty-eight hours of non-stop luxury partying. From red-carpet champagne kickoffs and rooftop sunrise raves to poolside takeovers and a celebrity-stacked grand finale, every chapter is designed for thrill-seekers who demand more than ordinary nightlife. The legendary Party Bus keeps the fire alive between stops – a moving nightclub with DJs, dancers, and drinks that never stop flowing.
+            </p>
+            <p className="text-base sm:text-lg text-white mb-4">
+              Created for foreign jet-setters and elitist Nigerians home for December, this isn’t just a party – it’s a rite of passage. Only <span className="font-bold text-yellow-300">100 people</span> will earn bragging rights to the most premium experience Abuja has ever staged. No random crowd, no guest list – just the elites who live for unforgettable December stories. The 48 Hours Club Tour is not an event… <span className="italic text-yellow-200">it’s history in the making.</span>
+            </p>
+          </div>
+        </div>
+      </section>
 
       {/* Referral Benefits Banner */}
       <div className="bg-gradient-to-r from-green-50 to-blue-50 py-12">
@@ -456,44 +516,7 @@ export default function DiasporaPage() {
       </div>
 
       {/* Referral Code Input Section */}
-      <div className="bg-gray-50 py-16">
-        <div className="mx-auto max-w-2xl px-6 lg:px-8">
-          <div className="text-center mb-8">
-            <h2 className="text-2xl font-bold text-gray-900">
-              Have a Referral Code?
-            </h2>
-            <p className="mt-2 text-gray-600">
-              Enter it here to get 15% off your diaspora package
-            </p>
-          </div>
-          
-          <div className="flex gap-4">
-            <input
-              type="text"
-              placeholder="Enter referral code"
-              value={referralCode}
-              onChange={(e) => setReferralCode(e.target.value.toUpperCase())}
-              className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
-            />
-            <button
-              onClick={() => validateReferralCode(referralCode)}
-              className="px-6 py-3 bg-orange-600 text-white rounded-lg hover:bg-orange-700 transition-colors"
-            >
-              Apply
-            </button>
-          </div>
-          
-          {message && (
-            <div className={`mt-4 p-4 rounded-lg text-center ${
-              message.includes('✅') || message.includes('🎉')
-                ? 'bg-green-50 text-green-800 border border-green-200'
-                : 'bg-red-50 text-red-800 border border-red-200'
-            }`}>
-              {message}
-            </div>
-          )}
-        </div>
-      </div>
+      {/* Standalone referral code section removed. Referral code will be entered during package registration only. */}
 
       {/* Booking Modal */}
       {selectedPackage && (
@@ -502,7 +525,6 @@ export default function DiasporaPage() {
             <div className="fixed inset-0 transition-opacity" onClick={() => setSelectedPackage(null)}>
               <div className="absolute inset-0 bg-gray-500 opacity-75"></div>
             </div>
-
             <div className="inline-block transform overflow-hidden rounded-lg bg-white px-4 pt-5 pb-4 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:p-6 sm:align-middle">
               <div className="absolute top-0 right-0 pt-4 pr-4">
                 <button
@@ -514,13 +536,11 @@ export default function DiasporaPage() {
                   </svg>
                 </button>
               </div>
-
               <div className="sm:flex sm:items-start">
                 <div className="mt-3 w-full text-center sm:mt-0 sm:text-left">
                   <h3 className="text-2xl font-bold text-gray-900 mb-4">
                     Book {selectedPackage.name}
                   </h3>
-                  
                   <div className="mb-6 p-4 bg-orange-50 rounded-lg">
                     <div className="flex justify-between items-center">
                       <span className="text-gray-700">Package Price:</span>
@@ -547,7 +567,6 @@ export default function DiasporaPage() {
                       </p>
                     )}
                   </div>
-                  
                   <form onSubmit={handleBooking} className="space-y-4">
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <input
@@ -564,7 +583,6 @@ export default function DiasporaPage() {
                         required
                       />
                     </div>
-                    
                     <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
                       <input
                         name="phone"
@@ -580,14 +598,20 @@ export default function DiasporaPage() {
                         className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-orange-500"
                       />
                     </div>
-                    
+                    {/* Referral Code Input */}
+                    <input
+                      name="referral_code"
+                      placeholder="Referral Code (if any)"
+                      className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-orange-500"
+                      maxLength={32}
+                      autoComplete="off"
+                    />
                     <textarea
                       name="special_requests"
                       placeholder="Special requests or dietary requirements..."
                       rows={3}
                       className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-orange-500"
                     />
-
                     <div className="flex space-x-3 pt-4">
                       <button
                         type="button"
@@ -600,13 +624,40 @@ export default function DiasporaPage() {
                         type="submit"
                         className="flex-1 bg-gradient-to-r from-orange-600 to-red-600 text-white px-4 py-2 rounded-lg hover:from-orange-700 hover:to-red-700 transition-all duration-300"
                       >
-                        Confirm Booking
+                        Continue to Payment
                       </button>
                     </div>
                   </form>
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Payment Modal for Diaspora Booking */}
+      {showPaymentModal && pendingBooking && ngnAmount && (
+        <PaymentModal
+          isOpen={showPaymentModal}
+          onClose={() => { setShowPaymentModal(false); setPendingBooking(null); setNgnAmount(null); }}
+          amount={ngnAmount}
+          description={`Diaspora Package: ${pendingBooking.package_name}`}
+          customerEmail={pendingBooking.email}
+          customerName={pendingBooking.full_name}
+          paymentType="diaspora"
+          itemId={pendingBooking.package_id}
+          itemName={pendingBooking.package_name}
+          onPaymentSuccess={handlePaymentSuccess}
+          onPaymentError={() => { setShowPaymentModal(false); setPendingBooking(null); setNgnAmount(null); setMessage('❌ Payment was not completed.'); }}
+        />
+      )}
+
+      {/* Loading exchange rate spinner */}
+      {loadingRate && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+          <div className="bg-white rounded-lg p-6 shadow-lg flex flex-col items-center">
+            <span className="text-lg font-semibold mb-2">Fetching live exchange rate...</span>
+            <div className="animate-spin h-8 w-8 border-4 border-orange-500 border-t-transparent rounded-full"></div>
           </div>
         </div>
       )}
@@ -791,6 +842,7 @@ export default function DiasporaPage() {
           </div>
         </div>
       </div>
+      <ContactEventFooter />
     </div>
   );
 }

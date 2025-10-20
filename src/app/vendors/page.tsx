@@ -1,6 +1,7 @@
 "use client";
 
 import VendorRegistrationForm from "@/components/VendorRegistrationForm";
+import ContactEventFooter from '@/components/ContactEventFooter';
 
 export default function VendorsPage() {
 
@@ -79,6 +80,7 @@ export default function VendorsPage() {
           </div>
         </div>
       </div>
+      <ContactEventFooter />
     </div>
   );
 }

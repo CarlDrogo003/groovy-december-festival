@@ -1,0 +1,9 @@
+Install a charting library for admin dashboard analytics. Recommended: recharts (lightweight, React-friendly).
+
+Run:
+npm install recharts
+
+Or, for yarn:
+yarn add recharts
+
+After install, charts can be imported from 'recharts' in your dashboard components.

@@ -1,4 +1,5 @@
 import Link from "next/link";
+import ContactEventFooter from '@/components/ContactEventFooter';
 import { Button } from "@/components/ui/Button";
 
 export default function PageantPage() {
@@ -229,6 +230,7 @@ export default function PageantPage() {
           </div>
         </div>
       </section>
+      <ContactEventFooter />
     </div>
   );
 }
