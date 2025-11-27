@@ -3,6 +3,30 @@
 import { useEffect, useState } from "react";
 // For live exchange rate (Frankfurter API, free)
 const EXCHANGE_API_URL = "https://api.frankfurter.app/latest?from=USD&to=NGN";
+
+// Valid diaspora referral codes
+const VALID_DIASPORA_CODES = [
+  "GroovyDIASPORA001",
+  "GroovyDIASPORA002",
+  "GroovyDIASPORA003",
+  "GroovyDIASPORA004",
+  "GroovyDIASPORA005",
+  "GroovyDIASPORA006",
+  "GroovyDIASPORA007",
+  "GroovyDIASPORA008",
+  "GroovyDIASPORA009",
+  "GroovyDIASPORA010",
+  "GroovyDIASPORA011",
+  "GroovyDIASPORA012",
+  "GroovyDIASPORA013",
+  "GroovyDIASPORA014",
+  "GroovyDIASPORA015",
+  "GroovyDIASPORA016",
+  "GroovyDIASPORA017",
+  "GroovyDIASPORA018",
+  "GroovyDIASPORA019",
+  "GroovyDIASPORA020",
+];
 import PaymentModal from "@/components/PaymentModal";
 import { supabase } from "@/lib/supabaseClient";
 import Link from "next/link";
@@ -195,7 +219,21 @@ export default function DiasporaPage() {
     setLoadingRate(true);
     const form = e.currentTarget;
     const formData = new FormData(form);
-    const referral_code = String(formData.get("referral_code") || "").trim() || null;
+    const referral_code = String(formData.get("referral_code") || "").trim();
+    
+    // Validate referral code is provided and valid
+    if (!referral_code) {
+      setMessage("❌ Referral code is required. Please enter a valid referral code.");
+      setLoadingRate(false);
+      return;
+    }
+    
+    if (!VALID_DIASPORA_CODES.includes(referral_code)) {
+      setMessage("❌ Invalid referral code. Please enter a valid code from your event coordinator.");
+      setLoadingRate(false);
+      return;
+    }
+    
     const booking = {
       package_id: selectedPackage?.id,
       package_name: selectedPackage?.name,
@@ -599,13 +637,19 @@ export default function DiasporaPage() {
                       />
                     </div>
                     {/* Referral Code Input */}
-                    <input
-                      name="referral_code"
-                      placeholder="Referral Code (if any)"
-                      className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-orange-500"
-                      maxLength={32}
-                      autoComplete="off"
-                    />
+                    <div>
+                      <input
+                        name="referral_code"
+                        placeholder="Referral Code *"
+                        className="w-full border border-gray-300 p-3 rounded-lg focus:ring-2 focus:ring-orange-500 font-semibold tracking-widest"
+                        maxLength={32}
+                        autoComplete="off"
+                        required
+                      />
+                      <p className="text-xs text-gray-600 mt-1">
+                        Enter your event coordinator's referral code (e.g., GroovyDIASPORA001)
+                      </p>
+                    </div>
                     <textarea
                       name="special_requests"
                       placeholder="Special requests or dietary requirements..."

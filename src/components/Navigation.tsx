@@ -51,11 +51,9 @@ export default function Navigation() {
               <Link href="/pageant" className="text-gray-800 hover:text-green-600 font-semibold transition-colors duration-200 border-b-2 border-transparent hover:border-green-500 pb-1">
                 Pageant
               </Link>
-              {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-              <a href="/#raffle" className="text-gray-800 hover:text-green-600 font-semibold transition-colors duration-200 relative border-b-2 border-transparent hover:border-green-500 pb-1">
-                Raffle
-                <span className="absolute -top-2 -right-3 bg-yellow-500 text-white text-xs px-2 py-1 rounded-full animate-bounce">KEKE!</span>
-              </a>
+              <Link href="/hotels" className="text-gray-800 hover:text-green-600 font-semibold transition-colors duration-200 border-b-2 border-transparent hover:border-green-500 pb-1">
+                Hotels
+              </Link>
               <Link href="/sponsors" className="text-gray-800 hover:text-green-600 font-semibold transition-colors duration-200 border-b-2 border-transparent hover:border-green-500 pb-1">
                 Sponsors
               </Link>
@@ -188,15 +186,13 @@ export default function Navigation() {
               <span className="font-semibold text-gray-800">Pageant</span>
             </Link>
 
-            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
-            <a 
-              href="/#raffle" 
-              className="block p-4 rounded-lg bg-white shadow-md hover:shadow-lg transition-all duration-200 hover:bg-yellow-50 relative"
+            <Link 
+              href="/hotels" 
+              className="block p-4 rounded-lg bg-white shadow-md hover:shadow-lg transition-all duration-200 hover:bg-green-50"
               onClick={closeMobileMenu}
             >
-              <span className="font-semibold text-gray-800">🛺 Raffle - Win KEKE!</span>
-              <span className="absolute top-2 right-2 bg-yellow-500 text-white text-xs px-2 py-1 rounded-full">NEW</span>
-            </a>
+              <span className="font-semibold text-gray-800">Hotels</span>
+            </Link>
 
             <Link 
               href="/sponsors" 

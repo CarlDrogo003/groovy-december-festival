@@ -466,9 +466,20 @@ export default function HomePage() {
               </div>
             </div>
             <div className="flex justify-center">
-              <div className="w-80 h-40 bg-white border-2 border-blue-200 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105">
-                <span className="text-gray-400 font-medium">DIAMOND SPONSOR LOGO</span>
-              </div>
+              <a 
+                href="https://www.frieslandcampina.com.ng/ng/" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="transform hover:scale-110 transition-all duration-300"
+              >
+                <div className="w-80 h-40 bg-white border-2 border-blue-200 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl overflow-hidden">
+                  <img 
+                    src="/assets/sponsors/GD sponsor_Peak.jpeg" 
+                    alt="Friesland Campina - Diamond Sponsor" 
+                    className="max-w-full max-h-full object-contain p-4"
+                  />
+                </div>
+              </a>
             </div>
           </div>
 

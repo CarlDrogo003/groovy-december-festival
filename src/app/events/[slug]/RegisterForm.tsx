@@ -32,6 +32,8 @@ export default function RegisterForm({
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [registrationData, setRegistrationData] = useState<any>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showRules, setShowRules] = useState(false);
+  const [agreedToRules, setAgreedToRules] = useState(false);
   
   const { user } = useAuth();
   const { trackEventRegistrationStart, trackEventRegistration, trackEventRegistrationComplete } = useEventTracking();
@@ -40,6 +42,9 @@ export default function RegisterForm({
   const actualEventFee = event?.registration_fee || eventFee;
   const isPaidEvent = actualEventFee > 0;
 
+  // Check if this is a hiking event
+  const isHikingEvent = eventName?.toLowerCase().includes('hiking');
+
   useEffect(() => {
     // Pre-fill user data if authenticated
     if (user) {
@@ -47,6 +52,60 @@ export default function RegisterForm({
       // You could fetch user profile data here
     }
   }, [user]);
+
+  const HikingRules = () => (
+    <div className="space-y-2 text-sm text-gray-700">
+      <div className="flex gap-2">
+        <span className="font-bold text-amber-700 min-w-fit">1. Punctuality</span>
+        <p>All participants must arrive at the meeting point at least 30 minutes before the hike begins for registration and safety briefing. Latecomers may not be allowed to join once the hike starts.</p>
+      </div>
+      
+      <div className="flex gap-2">
+        <span className="font-bold text-amber-700 min-w-fit">2. Proper Gear</span>
+        <p>Only participants wearing appropriate hiking shoes, clothing, and gear will be allowed on the trail. No slippers or open footwear.</p>
+      </div>
+      
+      <div className="flex gap-2">
+        <span className="font-bold text-amber-700 min-w-fit">3. Follow Instructions</span>
+        <p>All hikers must obey the guides, marshals, and safety officials at all times. Their instructions are for your safety.</p>
+      </div>
+      
+      <div className="flex gap-2">
+        <span className="font-bold text-amber-700 min-w-fit">4. Stay on the Trail</span>
+        <p>Do not wander off or take shortcuts. Remain with your assigned group and follow marked routes.</p>
+      </div>
+      
+      <div className="flex gap-2">
+        <span className="font-bold text-amber-700 min-w-fit">5. No Littering</span>
+        <p>Respect nature - dispose of waste properly or carry it back with you. Leave no trace.</p>
+      </div>
+      
+      <div className="flex gap-2">
+        <span className="font-bold text-amber-700 min-w-fit">6. Health & Safety</span>
+        <p>Inform organizers of any health conditions before the hike. Anyone feeling unwell during the challenge must notify a medic or marshal immediately.</p>
+      </div>
+      
+      <div className="flex gap-2">
+        <span className="font-bold text-amber-700 min-w-fit">7. No Rough Play</span>
+        <p>Running, pushing, or reckless behavior that may endanger others is strictly prohibited.</p>
+      </div>
+      
+      <div className="flex gap-2">
+        <span className="font-bold text-amber-700 min-w-fit">8. Substance-Free Zone</span>
+        <p>No alcohol, smoking, or drugs before or during the hike.</p>
+      </div>
+      
+      <div className="flex gap-2">
+        <span className="font-bold text-amber-700 min-w-fit">9. Respect Others</span>
+        <p>Be supportive and respectful to fellow hikers, volunteers, and staff. Team spirit is key.</p>
+      </div>
+      
+      <div className="flex gap-2">
+        <span className="font-bold text-amber-700 min-w-fit">10. Completion & Conduct</span>
+        <p>Participants who disregard rules or act unsafely may be disqualified or removed from the challenge.</p>
+      </div>
+    </div>
+  );
 
   const handleFreeRegistration = async (formData: any) => {
     try {
@@ -85,6 +144,7 @@ export default function RegisterForm({
       setFullName("");
       setEmail("");
       setPhone("");
+      setAgreedToRules(false);
 
     } catch (error) {
       console.error('Free registration error:', error);
@@ -102,6 +162,12 @@ export default function RegisterForm({
     // Validate form
     if (!fullName.trim() || !email.trim()) {
       setStatus("❌ Please fill in all required fields.");
+      return;
+    }
+
+    // Validate hiking event rules agreement
+    if (isHikingEvent && !agreedToRules) {
+      setStatus("❌ Please read and agree to the rules and regulations.");
       return;
     }
 
@@ -172,6 +238,7 @@ export default function RegisterForm({
       setEmail("");
       setPhone("");
       setRegistrationData(null);
+      setAgreedToRules(false);
 
     } catch (error) {
       console.error('Post-payment registration error:', error);
@@ -213,6 +280,43 @@ export default function RegisterForm({
             <p className="text-sm text-green-700 mt-1">{event.description}</p>
           )}
         </div>
+
+        {/* Hiking Rules Accordion Section */}
+        {isHikingEvent && (
+          <div className="mb-6 border border-amber-300 rounded-lg overflow-hidden bg-amber-50">
+            <button
+              type="button"
+              onClick={() => setShowRules(!showRules)}
+              className="w-full px-4 py-3 bg-amber-100 hover:bg-amber-200 text-amber-900 font-semibold flex items-center justify-between transition-colors"
+            >
+              <span className="flex items-center gap-2">
+                🥾 Hiking Challenge Rules & Regulations
+              </span>
+              <span className="text-xl">{showRules ? '▼' : '▶'}</span>
+            </button>
+            
+            {showRules && (
+              <div className="px-4 py-4 max-h-96 overflow-y-auto">
+                <HikingRules />
+              </div>
+            )}
+            
+            {/* T&C Acknowledgment */}
+            <div className="px-4 py-3 border-t border-amber-300 bg-white">
+              <label className="flex items-start gap-3 cursor-pointer hover:bg-amber-50 p-2 rounded transition-colors">
+                <input
+                  type="checkbox"
+                  checked={agreedToRules}
+                  onChange={(e) => setAgreedToRules(e.target.checked)}
+                  className="mt-1 w-5 h-5 accent-amber-600 cursor-pointer"
+                />
+                <span className="text-sm text-gray-700">
+                  I have read and agree to comply with all the <span className="font-semibold text-amber-900">Hiking Challenge Rules & Regulations</span>. I acknowledge that I am physically fit to participate and take full responsibility for my safety.
+                </span>
+              </label>
+            </div>
+          </div>
+        )}
 
         {/* Form Fields */}
         <div className="space-y-4 mb-6">
@@ -267,10 +371,10 @@ export default function RegisterForm({
             // Show payment button for paid events
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || (isHikingEvent && !agreedToRules)}
               className={`
                 w-full py-3 px-4 font-semibold rounded-lg transition-all duration-200
-                ${isSubmitting 
+                ${isSubmitting || (isHikingEvent && !agreedToRules)
                   ? 'bg-gray-400 text-white cursor-not-allowed' 
                   : 'bg-green-600 text-white hover:bg-green-700 focus:ring-4 focus:ring-green-200'
                 }
@@ -289,10 +393,10 @@ export default function RegisterForm({
             // Show free registration button
             <button
               type="submit"
-              disabled={isSubmitting}
+              disabled={isSubmitting || (isHikingEvent && !agreedToRules)}
               className={`
                 w-full py-3 px-4 font-semibold rounded-lg transition-all duration-200
-                ${isSubmitting 
+                ${isSubmitting || (isHikingEvent && !agreedToRules)
                   ? 'bg-gray-400 text-white cursor-not-allowed' 
                   : 'bg-green-600 text-white hover:bg-green-700 focus:ring-4 focus:ring-green-200'
                 }

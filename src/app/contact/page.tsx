@@ -23,10 +23,28 @@ export default function ContactPage() {
     };
 
     try {
-      const { error } = await supabase.from("contact_messages").insert([contactData]);
+      // Save to database
+      const { error: dbError } = await supabase.from("contact_messages").insert([contactData]);
 
-      if (error) {
-        setMessage("❌ Error: " + error.message);
+      if (dbError) {
+        setMessage("❌ Error: " + dbError.message);
+        setLoading(false);
+        return;
+      }
+
+      // Send email to hello@groovydecember.ng
+      const emailResponse = await fetch('/api/contact/send-message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(contactData),
+      });
+
+      const emailResult = await emailResponse.json();
+
+      if (!emailResponse.ok) {
+        setMessage("⚠️ Message saved but email send failed. We'll still review your message.");
       } else {
         form.reset();
         setMessage("✅ Message sent successfully! We'll get back to you soon.");
@@ -82,7 +100,7 @@ export default function ContactPage() {
                   </div>
                   <div>
                     <h3 className="font-semibold text-gray-900 mb-1">Email</h3>
-                    <p className="text-gray-600">hello@groovydecember.ng<br />info@groovydecember.ng</p>
+                    <p className="text-gray-600">hello@groovydecember.ng</p>
                   </div>
                 </div>
               </div>
