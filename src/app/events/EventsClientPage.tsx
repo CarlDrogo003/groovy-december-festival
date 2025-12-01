@@ -102,7 +102,10 @@ export function EventsClientPage() {
       
       setEvents(eventsWithImages);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to load events');
+      // Improve error reporting so the UI shows helpful details
+      const message = err && typeof err === 'object' && 'message' in err ? (err as any).message : (typeof err === 'string' ? err : JSON.stringify(err));
+      console.error('Events fetch error:', err);
+      setError(message || 'Failed to load events');
     } finally {
       setLoading(false);
     }
