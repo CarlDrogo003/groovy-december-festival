@@ -40,7 +40,6 @@ interface FormData {
   // Files
   headshot_file: File | null;
   full_body_file: File | null;
-  proof_of_payment_file: File | null;
   
   // Agreement
   declaration_agreed: boolean;
@@ -73,7 +72,6 @@ export default function RegistrationForm() {
     medical_conditions: '',
     headshot_file: null,
     full_body_file: null,
-    proof_of_payment_file: null,
     declaration_agreed: false,
   });
 
@@ -119,7 +117,6 @@ export default function RegistrationForm() {
       case 4: // File Uploads
         if (!formData.headshot_file) newErrors.headshot_file = 'Professional headshot is required';
         if (!formData.full_body_file) newErrors.full_body_file = 'Full body photo is required';
-        if (!formData.proof_of_payment_file) newErrors.proof_of_payment_file = 'Proof of payment is required';
         break;
 
       case 5: // Final Agreement
@@ -138,19 +135,15 @@ export default function RegistrationForm() {
     }
   };
 
-  const handleFileChange = (field: 'headshot_file' | 'full_body_file' | 'proof_of_payment_file', file: File | null) => {
+  const handleFileChange = (field: 'headshot_file' | 'full_body_file', file: File | null) => {
     if (file) {
       // Validate file type
-      const validTypes = field === 'proof_of_payment_file' 
-        ? ['image/jpeg', 'image/png', 'image/webp', 'application/pdf']
-        : ['image/jpeg', 'image/png', 'image/webp'];
+      const validTypes = ['image/jpeg', 'image/png', 'image/webp'];
       
       if (!validTypes.includes(file.type)) {
         setErrors(prev => ({ 
           ...prev, 
-          [field]: field === 'proof_of_payment_file' 
-            ? 'Please select a valid image or PDF file' 
-            : 'Please select a valid image file (JPEG, PNG, or WebP)'
+          [field]: 'Please select a valid image file (JPEG, PNG, or WebP)'
         }));
         return;
       }
@@ -166,8 +159,12 @@ export default function RegistrationForm() {
   };
 
   const nextStep = () => {
+    console.log('Next Step clicked, validating step:', currentStep);
     if (validateStep(currentStep)) {
+      console.log('Validation passed, moving to step:', currentStep + 1);
       setCurrentStep(prev => Math.min(prev + 1, totalSteps));
+    } else {
+      console.log('Validation failed for step:', currentStep, 'Errors:', errors);
     }
   };
 
@@ -205,10 +202,6 @@ export default function RegistrationForm() {
         ? await uploadFile(formData.full_body_file, 'fullbody', 'fullbody')
         : null;
 
-      const proofUrl = formData.proof_of_payment_file 
-        ? await uploadFile(formData.proof_of_payment_file, 'payments', 'proof')
-        : null;
-
       // Submit to database
       const { error } = await supabase.from("pageant_contestants").insert([{
         full_name: formData.full_name,
@@ -236,11 +229,10 @@ export default function RegistrationForm() {
         medical_conditions: formData.medical_conditions || null,
         headshot_url: headshotUrl,
         full_body_url: fullBodyUrl,
-        proof_of_payment_url: proofUrl,
         declaration_agreed: formData.declaration_agreed,
         status: 'pending',
         payment_status: 'pending',
-        payment_amount: 50.00,
+        payment_amount: 50000,
       }]);
 
       if (error) throw error;
@@ -255,7 +247,7 @@ export default function RegistrationForm() {
         emergency_contact_name: '', emergency_contact_phone: '', height: '', bust_chest: '',
         waist: '', hips: '', dress_size: '', languages: '', biography: '', why: '',
         platform: '', achievements: '', hobbies_skills: '', medical_conditions: '',
-        headshot_file: null, full_body_file: null, proof_of_payment_file: null,
+        headshot_file: null, full_body_file: null,
         declaration_agreed: false,
       });
       setCurrentStep(1);
@@ -602,7 +594,7 @@ export default function RegistrationForm() {
       case 4:
         return (
           <div className="space-y-6">
-            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Photo & Document Upload</h2>
+            <h2 className="text-2xl font-semibold text-gray-900 mb-4">Photo Upload</h2>
             
             <div className="bg-yellow-50 p-4 rounded-lg mb-6">
               <div className="flex">
@@ -671,35 +663,11 @@ export default function RegistrationForm() {
               </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Proof of Payment * ($50 Registration Fee)
-              </label>
-              <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
-                <input
-                  type="file"
-                  accept="image/*,application/pdf"
-                  onChange={(e) => handleFileChange('proof_of_payment_file', e.target.files?.[0] || null)}
-                  className="w-full"
-                />
-                {formData.proof_of_payment_file && (
-                  <p className="text-sm text-green-600 mt-2">
-                    ✓ {formData.proof_of_payment_file.name}
-                  </p>
-                )}
-                {errors.proof_of_payment_file && <p className="text-sm text-red-600 mt-1">{errors.proof_of_payment_file}</p>}
-              </div>
-              <div className="mt-2 p-3 bg-blue-50 rounded-lg">
-                <p className="text-sm text-blue-800">
-                  <strong>Payment Instructions:</strong>
-                </p>
-                <ul className="text-sm text-blue-700 mt-1 space-y-1">
-                  <li>• Send $50 via PayPal to: payments@groovydecember.com</li>
-                  <li>• Or Venmo: @GroovyDecember</li>
-                  <li>• Include your full name in the payment note</li>
-                  <li>• Upload screenshot or receipt as proof</li>
-                </ul>
-              </div>
+            <div className="bg-green-50 p-4 rounded-lg">
+              <h3 className="font-semibold text-green-800 mb-2">💳 Payment Information</h3>
+              <p className="text-sm text-green-700">
+                The ₦50,000 registration fee will be securely processed via Paystack on the next step. No payment information is needed at this stage.
+              </p>
             </div>
           </div>
         );
@@ -808,6 +776,20 @@ export default function RegistrationForm() {
       {/* Form Content */}
       <div className="bg-white rounded-lg shadow-lg p-6 md:p-8">
         {renderStep()}
+
+        {/* Validation Errors Display */}
+        {Object.keys(errors).length > 0 && (
+          <div className="mt-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <h3 className="font-semibold text-red-800 mb-2">Please fix the following errors:</h3>
+            <ul className="space-y-1">
+              {Object.entries(errors).map(([field, error]) => (
+                <li key={field} className="text-sm text-red-700">
+                  • {error}
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
         {/* Navigation Buttons */}
         <div className="flex justify-between mt-8 pt-6 border-t">

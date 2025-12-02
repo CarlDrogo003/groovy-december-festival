@@ -94,8 +94,8 @@ export default function PageantPage() {
               <h3 className="text-xl font-semibold mb-3">Important Dates</h3>
               <ul className="text-gray-600 space-y-2">
                 <li>• Registration: Now Open</li>
-                <li>• Deadline: Nov 30, 2025</li>
-                <li>• Auditions: Dec 10-15</li>
+                <li>• Deadline: Dec 12, 2025</li>
+                <li>• Auditions: Dec 12-15</li>
                 <li>• Finals: Dec 31, 2025</li>
                 <li>• Crowning: New Year's Eve</li>
               </ul>
@@ -192,7 +192,7 @@ export default function PageantPage() {
           <div className="grid md:grid-cols-3 gap-8">
             <div>
               <h3 className="text-lg font-semibold mb-4">Registration Fee</h3>
-              <p className="text-3xl font-bold text-pink-400 mb-2">$50</p>
+              <p className="text-3xl font-bold text-pink-400 mb-2">₦50,000</p>
               <p className="text-gray-400">One-time application fee</p>
             </div>
             <div>

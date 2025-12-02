@@ -37,8 +37,7 @@ export default function VendorRegistrationForm() {
   const [showPaymentModal, setShowPaymentModal] = useState(false);
   const [spaceQuantities, setSpaceQuantities] = useState<Record<string, number>>({
     premium_booth: 0,
-    standard_booth: 0,
-    food_kiosk: 0
+    standard_booth: 0
   });
   const [pendingFormData, setPendingFormData] = useState<Partial<VendorFormData>>({});
 
@@ -53,49 +52,31 @@ export default function VendorRegistrationForm() {
     {
       id: "premium_booth",
       name: "Premium Booth",
-      size: "10ft x 10ft",
-      price: 200000,
+      size: "5ft x 5ft",
+      price: 80000,
       description: "Prime location booth with maximum visibility and foot traffic. Perfect for established businesses looking to make a big impact.",
       features: [
-        "10ft x 10ft prime location",
+        "5ft x 5ft prime location",
         "High foot traffic area",
         "Professional setup assistance",
         "Premium lighting package",
-        "Multiple power outlets",
-        "Storage space included",
+        "Power outlet",
         "3-day festival access"
       ]
     },
     {
       id: "standard_booth",
       name: "Standard Booth",
-      size: "8ft x 8ft",
-      price: 150000,
+      size: "4ft x 4ft",
+      price: 50000,
       description: "Well-positioned booth space ideal for small to medium businesses. Great value with essential amenities included.",
       features: [
-        "8ft x 8ft booth space",
+        "4ft x 4ft booth space",
         "Good location placement",
         "Display table included",
         "Basic lighting",
         "Power outlet access",
         "Setup assistance",
-        "3-day festival access"
-      ]
-    },
-    {
-      id: "food_kiosk",
-      name: "Food Kiosk",
-      size: "6ft x 12ft",
-      price: 180000,
-      description: "Specialized food service kiosk in the food court area. Includes all necessary equipment for food preparation and service.",
-      features: [
-        "6ft x 12ft food service area",
-        "Food court prime location",
-        "Water and drainage access",
-        "Commercial power (220V)",
-        "Food prep equipment support",
-        "Waste management included",
-        "Health compliance assistance",
         "3-day festival access"
       ]
     }
@@ -278,7 +259,7 @@ export default function VendorRegistrationForm() {
             From premium booths to specialized kiosks, we have the perfect space for every business type and budget.
           </p>
           
-          <div className="grid md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-2 gap-6 max-w-2xl mx-auto">
             {vendorSpaces.map((space) => {
               const quantity = spaceQuantities[space.id] || 0;
               const isPremium = space.id === "premium_booth";
