@@ -1,3 +1,5 @@
+export const dynamic = "force-dynamic"; // Ensure the page is always rendered on the server
+
 import { Suspense } from 'react';
 import { EventsClientPage } from './EventsClientPage';
 import ContactEventFooter from '@/components/ContactEventFooter';

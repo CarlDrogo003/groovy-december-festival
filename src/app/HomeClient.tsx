@@ -466,16 +466,16 @@ export default function HomePage() {
               </div>
             </div>
             <div className="flex justify-center">
-              <a 
-                href="https://www.frieslandcampina.com.ng/ng/" 
-                target="_blank" 
+              <a
+                href="https://www.firstbanknigeria.com/"
+                target="_blank"
                 rel="noopener noreferrer"
                 className="transform hover:scale-110 transition-all duration-300"
               >
                 <div className="w-80 h-40 bg-white border-2 border-blue-200 rounded-2xl flex items-center justify-center shadow-lg hover:shadow-xl overflow-hidden">
-                  <img 
-                    src="/assets/sponsors/GD sponsor_Peak.jpeg" 
-                    alt="Friesland Campina - Diamond Sponsor" 
+                  <img
+                    src="/assets/sponsors/firstbank.png"
+                    alt="FirstBank - Diamond Sponsor"
                     className="max-w-full max-h-full object-contain p-4"
                   />
                 </div>
@@ -492,11 +492,17 @@ export default function HomePage() {
               </div>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
-              <div className="w-full h-32 bg-white border-2 border-yellow-200 rounded-xl flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
-                <span className="text-gray-400 font-medium">GOLD SPONSOR LOGO</span>
-              </div>
-              <div className="w-full h-32 bg-white border-2 border-yellow-200 rounded-xl flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105">
-                <span className="text-gray-400 font-medium">GOLD SPONSOR LOGO</span>
+              <a
+                href="https://www.peakmilk.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full h-32 bg-white border-2 border-yellow-200 rounded-xl flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 overflow-hidden"
+              >
+                <img src="/assets/sponsors/GD sponsor_Peak.jpeg" alt="Peak - Gold Sponsor" className="max-w-full max-h-full object-contain p-4" />
+              </a>
+
+              <div className="w-full h-32 bg-white border-2 border-yellow-200 rounded-xl flex items-center justify-center shadow-md hover:shadow-lg transition-all duration-300 hover:scale-105 overflow-hidden">
+                <img src="/assets/sponsors/1754801197_sponsor.jpg" alt="Gold Sponsor" className="max-w-full max-h-full object-contain p-4" />
               </div>
             </div>
           </div>
@@ -510,9 +516,14 @@ export default function HomePage() {
               </div>
             </div>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-              {[1, 2, 3, 4].map((item) => (
-                <div key={item} className="w-full h-24 bg-white border border-gray-200 rounded-xl flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
-                  <span className="text-gray-400 text-sm font-medium">SILVER LOGO</span>
+              {[
+                '1754801294_sponsor.jpg',
+                '1754801338_sponsor.jpg',
+                '1754801361_sponsor.jpg',
+                '1754801418_sponsor.jpg'
+              ].map((sponsor, index) => (
+                <div key={index} className="w-full h-24 bg-white border border-gray-200 rounded-xl flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 overflow-hidden">
+                  <img src={`/assets/sponsors/${sponsor}`} alt={`Silver Sponsor ${index + 1}`} className="max-w-full max-h-full object-contain p-2" />
                 </div>
               ))}
             </div>
@@ -527,9 +538,16 @@ export default function HomePage() {
               </div>
             </div>
             <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
-              {[1, 2, 3, 4, 5, 6].map((item) => (
-                <div key={item} className="w-full h-20 bg-white border border-orange-200 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105">
-                  <span className="text-gray-400 text-xs">BRONZE</span>
+              {[
+                '1754801451_sponsor.jpg',
+                '1754801481_sponsor.jpg',
+                '1754801504_sponsor.jpg',
+                '1754801528_sponsor.jpg',
+                '1754801558_sponsor.jpg',
+                '1754801577_sponsor.jpg'
+              ].map((sponsor, index) => (
+                <div key={index} className="w-full h-20 bg-white border border-orange-200 rounded-lg flex items-center justify-center shadow-sm hover:shadow-md transition-all duration-300 hover:scale-105 overflow-hidden">
+                  <img src={`/assets/sponsors/${sponsor}`} alt={`Bronze Sponsor ${index + 1}`} className="max-w-full max-h-full object-contain p-1" />
                 </div>
               ))}
             </div>

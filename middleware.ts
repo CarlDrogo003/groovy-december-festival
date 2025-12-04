@@ -4,36 +4,46 @@ import type { NextRequest } from 'next/server';
 
 export async function middleware(req: NextRequest) {
   const res = NextResponse.next();
+
+  // Only run Supabase middleware on protected routes
+  const protectedPaths = [
+    '/admin',
+    '/vendor-dashboard',
+    '/contestant-dashboard',
+    '/api/admin'
+  ];
+
+  const pathname = req.nextUrl.pathname;
+
+  // If route is NOT protected, do nothing
+  const isProtected = protectedPaths.some(p => pathname.startsWith(p));
+  if (!isProtected) {
+    return res;
+  }
+
+  // Run Supabase check only for protected routes
   const supabase = createMiddlewareClient({ req, res });
+  const { data: { session } } = await supabase.auth.getSession();
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  // Protected admin routes
-  if (req.nextUrl.pathname.startsWith('/admin')) {
+  // ADMIN routes
+  if (pathname.startsWith('/admin')) {
     if (!session) {
-      // Redirect to login if not authenticated
       return NextResponse.redirect(new URL('/auth?redirect=/admin', req.url));
     }
 
-    // Check if user has admin role
-    if (req.nextUrl.pathname.startsWith('/admin') && req.nextUrl.pathname !== '/admin/login') {
-      const { data: profile } = await supabase
-        .from('profiles')
-        .select('role')
-        .eq('id', session.user.id)
-        .single();
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', session.user.id)
+      .single();
 
-      if (!profile || profile.role !== 'admin') {
-        // Redirect non-admin users
-        return NextResponse.redirect(new URL('/auth?error=unauthorized', req.url));
-      }
+    if (!profile || profile.role !== 'admin') {
+      return NextResponse.redirect(new URL('/auth?error=unauthorized', req.url));
     }
   }
 
-  // Protected vendor routes
-  if (req.nextUrl.pathname.startsWith('/vendor-dashboard')) {
+  // VENDOR routes
+  if (pathname.startsWith('/vendor-dashboard')) {
     if (!session) {
       return NextResponse.redirect(new URL('/auth?redirect=/vendor-dashboard', req.url));
     }
@@ -49,8 +59,8 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // Protected contestant routes
-  if (req.nextUrl.pathname.startsWith('/contestant-dashboard')) {
+  // CONTESTANT routes
+  if (pathname.startsWith('/contestant-dashboard')) {
     if (!session) {
       return NextResponse.redirect(new URL('/auth?redirect=/contestant-dashboard', req.url));
     }
@@ -66,31 +76,15 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // API routes protection
-  if (req.nextUrl.pathname.startsWith('/api/admin')) {
-    if (!session) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', session.user.id)
-      .single();
-
-    if (!profile || profile.role !== 'admin') {
-      return NextResponse.json({ error: 'Forbidden' }, { status: 403 });
-    }
-  }
-
   return res;
 }
 
+// Vercel must only match PROTECTED routes
 export const config = {
   matcher: [
     '/admin/:path*',
     '/vendor-dashboard/:path*',
     '/contestant-dashboard/:path*',
-    '/api/admin/:path*',
-  ],
+    '/api/admin/:path*'
+  ]
 };
